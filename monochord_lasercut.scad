@@ -185,9 +185,9 @@ rack_fingerjoints = 10;
 // position and size along the panel's other axis; x positions/widths follow
 // the lasercut library's finger layout (start_up=0: second half-period of
 // each of the `rack_fingerjoints` divisions of rack_width).
-function rack_finger_cutouts(y, h) = [
+function rack_finger_cutouts(y, h, o) = [
     for (p = [0:rack_fingerjoints - 1]) [
-        rack_pos.x + rack_width * (2*p + 1) / (2*rack_fingerjoints),
+        rack_pos.x + (rack_width / rack_fingerjoints) * p + o * (rack_width / (2*rack_fingerjoints)),
         y,
         rack_width / (2*rack_fingerjoints),
         h
@@ -492,10 +492,10 @@ supports = [
     // Belly rail leg, under the soundboard's left edge back to the wall
     [
         [soundboard_pos.x, second_bend_y],
-        90,
+        90*s,
         inner_width - second_bend_y,
         belly_rail_th,
-        [[[0, 48, 0], -4, support_height, support_height*2]],
+        [[[0, 48*s, 0], -4*s, support_height, support_height*2]],
     ],
 ];
 
@@ -602,10 +602,10 @@ module case() {
                     ],
                     // Cutouts for the backrail finger joints (local y is
                     // world z minus the bottom board thickness)
-                    rack_finger_cutouts(backrail_pos.z - wall_th, wall_th),
+                    rack_finger_cutouts(backrail_pos.z - wall_th, wall_th, 0),
                     // Cutouts for the rack finger joints
                     use_rack_tongue
-                        ? rack_finger_cutouts(rack_pos.z - wall_th, wall_th)
+                        ? rack_finger_cutouts(rack_pos.z - wall_th, wall_th, 1)
                         : []
                 ),
                 finger_joints=[
@@ -849,7 +849,7 @@ module backrail() {
                 ],
             ],
             finger_joints=[
-                [UP, 0, rack_fingerjoints],
+                [UP, 1, rack_fingerjoints],
             ],
         );
 }
