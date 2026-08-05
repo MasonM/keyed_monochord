@@ -320,7 +320,7 @@ col_iron = [0.37, 0.4, 0.41];
 
 /* [Advanced] */
 debug_mode = false;
-$fn = 16;
+$fn = 32;
 
 function is_accidental(key_idx) =
     let (
@@ -492,7 +492,7 @@ supports = [
     // Belly rail leg, under the soundboard's left edge back to the wall
     [
         [soundboard_pos.x, second_bend_y],
-        90*s,
+        90,
         inner_width - second_bend_y,
         belly_rail_th,
         [[[0, 48*s, 0], -4*s, support_height, support_height*2]],
