@@ -541,7 +541,7 @@ if (debug_mode) {
 }
 
 module side_wall() {
-    lasercutoutSquare(
+    color("yellow") lasercutoutSquare(
             thickness=wall_th,
             x=height,
             y=inner_width,
@@ -558,111 +558,109 @@ module side_wall() {
 }
 
 module case() {
-    color(col_wood_med) {
-        // Lower bottom
+    // Lower bottom
+    color("red") lasercutoutSquare(
+        thickness=wall_th,
+        x=inner_length,
+        y=inner_width,
+        finger_joints=[
+            [UP, 1, 15],
+            [LEFT, 1, 4],
+            [RIGHT, 0, 4],
+            [DOWN, 1, 15]
+        ],
+        cutouts=concat(
+            // Holes for the bottom tabs of the belly rail and liners
+            all_support_tab_holes(),
+            // Holes for the finger joints of the hitchpin block (left)
+            // and wrestplank (right), which both use [LEFT, 0, 4]
+            // fingers along the case's inner width
+            [for (i = [0:3]) each [
+                [0, inner_width * (2*i + 1) / 8,
+                    hitchpin_block_th, inner_width / 8],
+                [inner_length - wrestplank_width, inner_width * (2*i + 1) / 8,
+                    wrestplank_width, inner_width / 8],
+            ]]
+        ),
+    );
+
+    // Back wall
+    color("blue") translate([0, inner_width + wall_th, wall_th]) rotate([90, 0, 0])
         lasercutoutSquare(
             thickness=wall_th,
             x=inner_length,
-            y=inner_width,
+            y=height,
+            cutouts = concat(
+                [
+                    // Deepen finger joints on left side for hitchpin block
+                    [ 0, -wall_th, wall_th, height / 8 ],
+                    [ 0, height / 8, wall_th, height / 8 ],
+                    // Deepen finger joints on right side for wrestplank
+                    [ inner_length - wall_th, -wall_th, wall_th, height / 8 ],
+                    [ inner_length - wall_th, height / 8, wall_th, height / 8 ],
+                ],
+                // Cutouts for the backrail finger joints (local y is
+                // world z minus the bottom board thickness)
+                rack_finger_cutouts(backrail_pos.z - wall_th, wall_th, 0),
+                // Cutouts for the rack finger joints
+                use_rack_tongue
+                    ? rack_finger_cutouts(rack_pos.z - wall_th, wall_th, 1)
+                    : []
+            ),
             finger_joints=[
-                [UP, 1, 15],
                 [LEFT, 1, 4],
                 [RIGHT, 0, 4],
                 [DOWN, 1, 15]
             ],
-            cutouts=concat(
-                // Holes for the bottom tabs of the belly rail and liners
-                all_support_tab_holes(),
-                // Holes for the finger joints of the hitchpin block (left)
-                // and wrestplank (right), which both use [LEFT, 0, 4]
-                // fingers along the case's inner width
-                [for (i = [0:3]) each [
-                    [0, inner_width * (2*i + 1) / 8,
-                        hitchpin_block_th, inner_width / 8],
-                    [inner_length - wrestplank_width, inner_width * (2*i + 1) / 8,
-                        wrestplank_width, inner_width / 8],
-                ]]
-            ),
         );
 
-        // Back wall
-        translate([0, inner_width + wall_th, wall_th]) rotate([90, 0, 0])
-            lasercutoutSquare(
-                thickness=wall_th,
-                x=inner_length,
-                y=height,
-                cutouts = concat(
-                    [
-                        // Deepen finger joints on left side for hitchpin block
-                        [ 0, -wall_th, wall_th, height / 8 ],
-                        [ 0, height / 8, wall_th, height / 8 ],
-                        // Deepen finger joints on right side for wrestplank
-                        [ inner_length - wall_th, -wall_th, wall_th, height / 8 ],
-                        [ inner_length - wall_th, height / 8, wall_th, height / 8 ],
-                    ],
-                    // Cutouts for the backrail finger joints (local y is
-                    // world z minus the bottom board thickness)
-                    rack_finger_cutouts(backrail_pos.z - wall_th, wall_th, 0),
-                    // Cutouts for the rack finger joints
-                    use_rack_tongue
-                        ? rack_finger_cutouts(rack_pos.z - wall_th, wall_th, 1)
-                        : []
-                ),
-                finger_joints=[
-                    [LEFT, 1, 4],
-                    [RIGHT, 0, 4],
-                    [DOWN, 1, 15]
-                ],
-            );
+    // Front wall
+    keywell_y = kb_pos.z - nat_height;
+    balance_rail_cutout_w = kb_length / balance_rail_fingerjoints / 2;
 
-        // Front wall
-        keywell_y = kb_pos.z - nat_height;
-        balance_rail_cutout_w = kb_length / balance_rail_fingerjoints / 2;
-
-        translate([0, 0, wall_th]) rotate([90, 0, 0]) lasercutout(
-            thickness=wall_th,
-            points = [
-                [0,0],
-                [inner_length, 0],
-                [inner_length, height],
-                [kb_pos.x + kb_length, height],
-                [kb_pos.x + kb_length, keywell_y],
-                [kb_pos.x, kb_pos.z - nat_height],
-                [kb_pos.x, height],
-                [0, height],
-                [0, 0],
+    color("green") translate([0, 0, wall_th]) rotate([90, 0, 0]) lasercutout(
+        thickness=wall_th,
+        points = [
+            [0,0],
+            [inner_length, 0],
+            [inner_length, height],
+            [kb_pos.x + kb_length, height],
+            [kb_pos.x + kb_length, keywell_y],
+            [kb_pos.x, kb_pos.z - nat_height],
+            [kb_pos.x, height],
+            [0, height],
+            [0, 0],
+        ],
+        cutouts = [
+            // Cutouts for the balance rail finger joints
+            for (i=[0:balance_rail_fingerjoints - 1]) [
+                kb_pos.x + (balance_rail_cutout_w * i * 2),
+                keywell_y - wall_th,
+                balance_rail_cutout_w,
+                wall_th
             ],
-            cutouts = [
-                // Cutouts for the balance rail finger joints
-                for (i=[0:balance_rail_fingerjoints - 1]) [
-                    kb_pos.x + (balance_rail_cutout_w * i * 2),
-                    keywell_y - wall_th,
-                    balance_rail_cutout_w,
-                    wall_th
-                ],
-                // Deepen finger joints on left side for hitchpin block
-                [ 0, 0, wall_th, height / 8 ],
-                [ 0, height / 4, wall_th, height / 8 ],
-                // Deepen finger joints on right side for wrestplank
-                [ inner_length - wall_th, 0, wall_th, height / 8 ],
-                [ inner_length - wall_th, height / 4, wall_th, height / 8 ],
-            ],
-            finger_joints=[
-                [LEFT, 0, 4],
-                [RIGHT, 1, 4],
-                [DOWN, 0, 15],
-            ],
-        );
+            // Deepen finger joints on left side for hitchpin block
+            [ 0, 0, wall_th, height / 8 ],
+            [ 0, height / 4, wall_th, height / 8 ],
+            // Deepen finger joints on right side for wrestplank
+            [ inner_length - wall_th, 0, wall_th, height / 8 ],
+            [ inner_length - wall_th, height / 4, wall_th, height / 8 ],
+        ],
+        finger_joints=[
+            [LEFT, 0, 4],
+            [RIGHT, 1, 4],
+            [DOWN, 0, 15],
+        ],
+    );
 
-        // Left wall
-        translate([0, 0, wall_th]) rotate([0, -90, 0])
-            side_wall();
+    // Left wall
+    translate([0, 0, wall_th]) rotate([0, -90, 0])
+        side_wall();
 
-        // Right wall
-        translate([inner_length + wall_th, 0, wall_th]) rotate([0, -90, 0])
-            side_wall();
+    // Right wall
+    translate([inner_length + wall_th, 0, wall_th]) rotate([0, -90, 0])
+        side_wall();
 
-    }
 }
 
 module hitchpin_block() {
