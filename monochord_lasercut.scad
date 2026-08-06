@@ -149,7 +149,7 @@ tangent_top_width = tangent_height / 2;
 tangent_bottom_width = tangent_top_width / 4;
 tangent_depth = wall_th / 10;
 tangent_top_string_clearance = wall_th / 10;
-tangent_mortise_radius = 3 / 2;
+tangent_mortise_radius = 1.5 * s;
 
 /* [Hitchpin Block] */
 
@@ -208,6 +208,7 @@ rack_tongue_depth = rack_th * (2/3);
 use_rack_tongue = true;
 key_lever_top_y = inner_width - (use_rack_tongue ? rack_th : wall_th * (1/3)) - key_lever_side_clearance;
 balance_rail_fingerjoints = 10;
+balance_rail_width = inner_width * (2/14);
 
 /* [Wrestplank] */
 
@@ -782,19 +783,20 @@ module balance_rail() {
         lasercutoutSquare(
             thickness=wall_th,
             x=kb_length,
-            y=wall_th*2,
+            y=balance_rail_width,
             // Hacky workaround so we have a single finger joint on the left side
             no_joint_points = [
                 [0,0],
                 [-kb_pos.x + wall_th,0],
                 [-kb_pos.x + wall_th, wall_th],
                 [-kb_pos.x, wall_th],
-                [-kb_pos.x, wall_th*2],
+                [-kb_pos.x, balance_rail_width],
+                [0, balance_rail_width],
                 [0,wall_th*2],
                 [0,0],
             ],
             slits = [
-                [51*s, kb_length, 10*s, 100],
+                [51, kb_length, 10*s, 100],
             ],
             circles_remove=[
                 for (key_idx=[0:num_keys - 1]) [
