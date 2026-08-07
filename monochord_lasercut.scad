@@ -39,7 +39,7 @@ show_string = false;
 // consistent with the master's diagram (Plate IX). Of course, this choice of
 // size is only one of many possible options."
 
-inner_length = 644;
+inner_length = 644/2;
 
 // Scale factor for constants calculated relative to original length (can't use scale() with lasercut.scad)
 s = inner_length / 644;
@@ -54,7 +54,7 @@ s = inner_length / 644;
 
 inner_width = inner_length * (3/14);
 height = inner_width / 2;
-wall_th = 6*s;
+wall_th = 3.2;
 
 // "Likewise, the starting and ending points for measurement, the bridge, and
 // the sound hole were placed as follows: the starting point of measurement and
@@ -160,7 +160,7 @@ hitchpin_block_height = (height - inner_bottom_z) * (2/3);
 // Hitchpin height (?)
 hitchpin_height = hitchpin_block_height * (2/3);
 // Hitchpin radius (?)
-hitchpin_radius = 1.1;
+hitchpin_radius = 1.05;
 
 /* [Rack] */
 
@@ -193,8 +193,6 @@ function rack_finger_cutouts(y, h, o) = [
         h
     ]
 ];
-guide_pin_height = 2*nat_height;
-guide_pin_radius = 1;
 
 /* [Key Levers] */
 
@@ -586,6 +584,7 @@ module case() {
     );
 
     // Back wall
+    // TODO: Left finger joint off?
     color("blue") translate([0, inner_width + wall_th, wall_th]) rotate([90, 0, 0])
         lasercutoutSquare(
             thickness=wall_th,
@@ -740,6 +739,7 @@ module wrestplank() {
             y=inner_width,
             simple_tab_holes = [
                 // Soundboard finger joint cutouts
+                // TODO: fix
                 for (i = [1:3])
                     [RIGHT, hitchpin_block_height - 14.7, soundboard_pos.y*(i/4), [wall_th, 3, wall_th]],
             ],
@@ -806,6 +806,7 @@ module balance_rail() {
                 ],
             ],
             finger_joints=[
+                // TODO: fix
                 [DOWN, 0, balance_rail_fingerjoints],
             ],
         );
@@ -886,7 +887,6 @@ module keyboard() {
 
 module belly_rail_section(s) {
     length = s[2];
-    color(col_wood_med)
     translate([s[0].x, s[0].y, inner_bottom_z])
         rotate([0, 0, s[1]])
         rotate([90, 0, 0])
@@ -905,8 +905,9 @@ module belly_rail_section(s) {
 }
 
 module belly_rail() {
-    belly_rail_section(supports[0]);
-    belly_rail_section(supports[1]);
+    // TODO: fix overlap
+    color("purple") belly_rail_section(supports[0]);
+    color("pink") belly_rail_section(supports[1]);
 }
 
 module soundboard() {
