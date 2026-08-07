@@ -865,6 +865,14 @@ module key(key_idx) {
             // y=0 (the key fronts), so the default max_y-based stacking in
             // the generated 2D file makes adjacent keys overlap and merge.
             flat_adjust=[0, key_depth],
+            /*
+            text_add = [[
+                key_label(key_idx),
+                (is_accidental(key_idx) ? accidental_width : key_width) / 5,
+                key_x(key_idx) + (is_accidental(key_idx) ? accidental_width : key_width) / 4,
+                (is_accidental(key_idx) ? -accidental_depth : -key_depth) * (6/7),
+            ]],
+            */
             circles_remove=[
                 [
                     balance_pin_radius * (3/2),
