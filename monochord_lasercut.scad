@@ -635,7 +635,7 @@ module case() {
                 kb_pos.x + (balance_rail_cutout_w * i * 2),
                 keywell_y - wall_th,
                 balance_rail_cutout_w,
-                wall_th
+                wall_th*2
             ],
             // Deepen finger joints on left side for hitchpin block
             [ 0, 0, wall_th, height / 8 ],
@@ -688,6 +688,7 @@ module hitchpin_block() {
                     wall_th*4,
                     wall_th,
                 ],
+                // TODO: Hole for nail
             ],
             simple_tabs = [
                 // Right tabs connecting to front panel
@@ -818,6 +819,7 @@ module balance_rail() {
 
 module rack() {
     color(col_wood_dark)
+    // TODO: Rotate vertically, then staggered
     translate(rack_pos)
         lasercutoutSquare(
             thickness=wall_th,
