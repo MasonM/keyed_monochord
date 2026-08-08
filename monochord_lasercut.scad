@@ -786,11 +786,18 @@ module balance_rail() {
             y=balance_rail_width,
             // Hacky workaround so we have a single finger joint on the left side
             no_joint_points = [
+                // Bottom right
                 [0,0],
-                [-kb_pos.x + wall_th,0],
+                // Bottom left
+                [-kb_pos.x + wall_th, 0],
+                // Finger joint cutout
                 [-kb_pos.x + wall_th, wall_th],
                 [-kb_pos.x, wall_th],
-                [-kb_pos.x, balance_rail_width],
+                [-kb_pos.x, wall_th*2],
+                [-kb_pos.x + wall_th, wall_th*2],
+                // Top left
+                [-kb_pos.x + wall_th, balance_rail_width],
+                // Top right
                 [0, balance_rail_width],
                 [0,wall_th*2],
                 [0,0],
@@ -806,7 +813,6 @@ module balance_rail() {
                 ],
             ],
             finger_joints=[
-                // TODO: fix
                 [DOWN, 0, balance_rail_fingerjoints],
             ],
         );
