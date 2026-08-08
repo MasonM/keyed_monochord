@@ -40,6 +40,9 @@ show_string = false;
 // size is only one of many possible options."
 
 inner_length = 644/2;
+wall_th = 3.2;
+// Hitchpin block thickness (?)
+hitchpin_block_th = 6;
 
 // Scale factor for constants calculated relative to original length (can't use scale() with lasercut.scad)
 s = inner_length / 644;
@@ -54,7 +57,6 @@ s = inner_length / 644;
 
 inner_width = inner_length * (3/14);
 height = inner_width / 2;
-wall_th = 3.2;
 
 // "Likewise, the starting and ending points for measurement, the bridge, and
 // the sound hole were placed as follows: the starting point of measurement and
@@ -153,8 +155,6 @@ tangent_mortise_radius = 1.5 * s;
 
 /* [Hitchpin Block] */
 
-// Hitchpin block thickness (?)
-hitchpin_block_th = 6;
 // Hitchpin block height (?)
 hitchpin_block_height = (height - inner_bottom_z) * (3/4);
 // Hitchpin height (?)
@@ -522,7 +522,6 @@ function support_tab_holes(s) =
 // Tab holes of all supports, cut into the case bottom
 function all_support_tab_holes() = [
     for (s = supports) each support_tab_holes(s),
-    [0, inner_width-wall_th, wall_th, wall_th*2],
 ];
 
 if (debug_mode) {
@@ -574,11 +573,11 @@ module case() {
             // Holes for the finger joints of the hitchpin block (left)
             // and wrestplank (right), which both use [LEFT, 0, 4]
             // fingers along the case's inner width
+            [[0, inner_width-wall_th, hitchpin_block_th, wall_th + hitchpin_block_th]],
+            [[inner_length - wrestplank_width, inner_width-wall_th, wrestplank_width, wall_th + wrestplank_width]],
             [for (i = [0:3]) each [
-                [0, inner_width * (2*i + 1) / 8,
-                    hitchpin_block_th, inner_width / 8],
-                [inner_length - wrestplank_width, inner_width * (2*i + 1) / 8,
-                    wrestplank_width, inner_width / 8],
+                [0, inner_width * (2*i + 1) / 8, hitchpin_block_th, inner_width / 8],
+                [inner_length - wrestplank_width, inner_width * (2*i + 1) / 8, wrestplank_width, inner_width / 8],
             ]]
         ),
     );
@@ -639,8 +638,8 @@ module case() {
                 wall_th*2
             ],
             // Deepen finger joints on left side for hitchpin block
-            [ 0, 0, wall_th, height / 8 ],
-            [ 0, height / 4, wall_th, height / 8 ],
+            [ 0, 0, hitchpin_block_th, height / 8 ],
+            [ 0, height / 4, hitchpin_block_th, height / 8 ],
             // Deepen finger joints on right side for wrestplank
             [ inner_length - wall_th, 0, wall_th, height / 8 ],
             [ inner_length - wall_th, height / 4, wall_th, height / 8 ],
