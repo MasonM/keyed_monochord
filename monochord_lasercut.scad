@@ -594,8 +594,8 @@ module case() {
                     [ 0, -wall_th, wall_th, wall_th ],
                     [ 0, height / 8, hitchpin_block_th, height / 8 ],
                     // Deepen finger joints on right side for wrestplank
-                    [ inner_length - wall_th, -wall_th, wall_th, wall_th ],
-                    [ inner_length - wall_th, height / 8, wall_th, height / 8 ],
+                    [ inner_length - wrestplank_width, -wall_th, wrestplank_width, wall_th ],
+                    [ inner_length - wrestplank_width, height / 8, wrestplank_width, height / 8 ],
                 ],
                 // Cutouts for the backrail finger joints (local y is
                 // world z minus the bottom board thickness)
@@ -641,8 +641,8 @@ module case() {
             [ 0, 0, hitchpin_block_th, height / 8 ],
             [ 0, height / 4, hitchpin_block_th, height / 8 ],
             // Deepen finger joints on right side for wrestplank
-            [ inner_length - wall_th, 0, wall_th, height / 8 ],
-            [ inner_length - wall_th, height / 4, wall_th, height / 8 ],
+            [ inner_length - wrestplank_width, 0, wrestplank_width, height / 8 ],
+            [ inner_length - wrestplank_width, height / 4, wrestplank_width, height / 8 ],
         ],
         finger_joints=[
             [LEFT, 0, 4],
