@@ -201,10 +201,11 @@ function rack_finger_cutouts(y, h, o) = [
 
 second_bend_y = inner_width * (2/5);
 key_lever_side_clearance = slot_width / 6;
+key_lever_top_clearance = slot_width / 2;
 rack_tongue_width = slot_width * (2/3);
 rack_tongue_depth = rack_th * (2/3);
 use_rack_tongue = true;
-key_lever_top_y = inner_width - (use_rack_tongue ? rack_th : wall_th * (1/3)) - key_lever_side_clearance;
+key_lever_top_y = inner_width - (use_rack_tongue ? rack_th : wall_th * (1/3)) - key_lever_top_clearance;
 balance_rail_fingerjoints = 10;
 balance_rail_width = inner_width * (2/14);
 
@@ -685,7 +686,7 @@ module hitchpin_block() {
                 [
                     kb_pos.z - nat_height - wall_th,
                     wall_th,
-                    wall_th*4,
+                    wall_th,
                     wall_th,
                 ],
                 // TODO: Hole for nail
@@ -738,7 +739,7 @@ module wrestplank() {
             y=inner_width,
             simple_tab_holes = [
                 // Soundboard finger joint cutouts
-                for (i = [1:3])
+                for (i = [1,3])
                     [RIGHT, soundboard_pos.z - wrestplank_pos.z, soundboard_pos.y*(i/4), [wall_th, soundboard_height, wall_th]],
             ],
             simple_tabs = [
@@ -747,13 +748,13 @@ module wrestplank() {
                     RIGHT,
                     0,
                     -wall_th/2,
-                    [wall_th, height / 8, wall_th],
+                    [wrestplank_width, height / 8, wrestplank_width],
                 ],
                 [
                     RIGHT,
                     height / 4,
                     -wall_th/2,
-                    [wall_th, height / 8, wall_th],
+                    [wrestplank_width, height / 8, wrestplank_width],
                 ],
                 // Left tabs connecting to back panel
                 [
@@ -766,7 +767,7 @@ module wrestplank() {
                     RIGHT,
                     height / 8,
                     inner_width + wall_th / 2,
-                    [wall_th, height / 8, wall_th],
+                    [wrestplank_width, height / 8, wrestplank_width],
                 ],
             ],
             finger_joints=[
@@ -935,8 +936,8 @@ module soundboard() {
                 [soundboard_pos.x, second_bend_y],
             ],
             simple_tabs=[
-                for (i = [1:3])
-                    [RIGHT, soundboard_pos.x + soundboard_width, soundboard_pos.y*(i/4), [wall_th, wall_th, 3]],
+                for (i = [1,3])
+                [RIGHT, soundboard_pos.x + soundboard_width, soundboard_pos.y*(i/4), [wall_th, wall_th, 3]],
             ],
             circles_remove=[
                 [mousehole_radius, mousehole_pos.x, mousehole_pos.y]
