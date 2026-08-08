@@ -583,7 +583,6 @@ module case() {
     );
 
     // Back wall
-    // TODO: Left finger joint off?
     color("blue") translate([0, inner_width + wall_th, wall_th]) rotate([90, 0, 0])
         lasercutoutSquare(
             thickness=wall_th,
@@ -592,10 +591,10 @@ module case() {
             cutouts = concat(
                 [
                     // Deepen finger joints on left side for hitchpin block
-                    [ 0, -wall_th, wall_th, height / 8 ],
+                    [ 0, -wall_th, wall_th, wall_th ],
                     [ 0, height / 8, wall_th, height / 8 ],
                     // Deepen finger joints on right side for wrestplank
-                    [ inner_length - wall_th, -wall_th, wall_th, height / 8 ],
+                    [ inner_length - wall_th, -wall_th, wall_th, wall_th ],
                     [ inner_length - wall_th, height / 8, wall_th, height / 8 ],
                 ],
                 // Cutouts for the backrail finger joints (local y is
@@ -709,7 +708,7 @@ module hitchpin_block() {
                     RIGHT,
                     -wall_th,
                     inner_width + wall_th / 2,
-                    [wall_th, height / 8, wall_th],
+                    [wall_th, wall_th, wall_th],
                 ],
                 [
                     RIGHT,
@@ -761,7 +760,7 @@ module wrestplank() {
                     RIGHT,
                     -wall_th,
                     inner_width + wall_th / 2,
-                    [wall_th, height / 8, wall_th],
+                    [wall_th, wall_th, wall_th],
                 ],
                 [
                     RIGHT,
@@ -942,6 +941,7 @@ module soundboard() {
                 [mousehole_radius, mousehole_pos.x, mousehole_pos.y]
             ],
             cutouts=[
+                // TODO: cutout for balance rail
                 // Belly rail cutouts
                 for (s = supports) each support_tab_holes(s),
                 // Bridge tab cutouts
