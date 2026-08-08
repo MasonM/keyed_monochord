@@ -490,11 +490,10 @@ supports = [
     ],
     // Belly rail leg, under the soundboard's left edge back to the wall
     [
-        [soundboard_pos.x, second_bend_y],
+        [soundboard_pos.x, second_bend_y + wall_th*0.9],
         90,
-        inner_width - second_bend_y,
+        inner_width - second_bend_y - wall_th*0.9,
         belly_rail_th,
-        [[[0, 48*s, 0], -4*s, support_height, support_height*2]],
     ],
 ];
 
@@ -919,7 +918,6 @@ module belly_rail_section(s) {
 }
 
 module belly_rail() {
-    // TODO: fix overlap
     color("purple") belly_rail_section(supports[0]);
     color("pink") belly_rail_section(supports[1]);
 }
