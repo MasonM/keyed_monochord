@@ -154,7 +154,7 @@ tangent_mortise_radius = 1.5 * s;
 /* [Hitchpin Block] */
 
 // Hitchpin block thickness (?)
-hitchpin_block_th = wall_th;
+hitchpin_block_th = 6;
 // Hitchpin block height (?)
 hitchpin_block_height = (height - inner_bottom_z) * (3/4);
 // Hitchpin height (?)
@@ -172,7 +172,7 @@ rack_th = wall_th * 2;
 rack_height = hitchpin_block_height;
 // Rack starting position (XYZ) (?)
 rack_pos = [
-    wall_th,
+    hitchpin_block_th,
     inner_width - rack_th,
     kb_pos.z
 ];
@@ -212,7 +212,7 @@ balance_rail_width = inner_width * (2/14);
 /* [Wrestplank] */
 
 // Wrestplank width (?)
-wrestplank_width = wall_th;
+wrestplank_width = hitchpin_block_th;
 // Wrestplank height (?)
 wrestplank_height = hitchpin_block_height;
 // Wrestplank position (?) In this file the case interior spans
@@ -593,7 +593,7 @@ module case() {
                 [
                     // Deepen finger joints on left side for hitchpin block
                     [ 0, -wall_th, wall_th, wall_th ],
-                    [ 0, height / 8, wall_th, height / 8 ],
+                    [ 0, height / 8, hitchpin_block_th, height / 8 ],
                     // Deepen finger joints on right side for wrestplank
                     [ inner_length - wall_th, -wall_th, wall_th, wall_th ],
                     [ inner_length - wall_th, height / 8, wall_th, height / 8 ],
@@ -697,30 +697,30 @@ module hitchpin_block() {
                     RIGHT,
                     0,
                     -wall_th/2,
-                    [wall_th, height / 8, wall_th],
+                    [wall_th, height / 8, hitchpin_block_th],
                 ],
                 [
                     RIGHT,
                     height / 4,
                     -wall_th/2,
-                    [wall_th, height / 8, wall_th],
+                    [wall_th, height / 8, hitchpin_block_th],
                 ],
                 // Left tabs connecting to back panel
                 [
                     RIGHT,
                     -wall_th,
                     inner_width + wall_th / 2,
-                    [wall_th, wall_th, wall_th],
+                    [wall_th, wall_th, hitchpin_block_th],
                 ],
                 [
                     RIGHT,
                     height / 8,
                     inner_width + wall_th / 2,
-                    [wall_th, height / 8, wall_th],
+                    [wall_th, height / 8, hitchpin_block_th],
                 ],
             ],
             finger_joints=[
-                [LEFT, 0, 4],
+                [LEFT, 0, 4, [wall_th, hitchpin_block_th]],
             ],
         );
 }
@@ -748,30 +748,30 @@ module wrestplank() {
                     RIGHT,
                     0,
                     -wall_th/2,
-                    [wrestplank_width, height / 8, wrestplank_width],
+                    [wall_th, height / 8, wrestplank_width],
                 ],
                 [
                     RIGHT,
                     height / 4,
                     -wall_th/2,
-                    [wrestplank_width, height / 8, wrestplank_width],
+                    [wall_th, height / 8, wrestplank_width],
                 ],
                 // Left tabs connecting to back panel
                 [
                     RIGHT,
                     -wall_th,
                     inner_width + wall_th / 2,
-                    [wall_th, wall_th, wall_th],
+                    [wall_th, wall_th, wrestplank_width],
                 ],
                 [
                     RIGHT,
                     height / 8,
                     inner_width + wall_th / 2,
-                    [wrestplank_width, height / 8, wrestplank_width],
+                    [wall_th, height / 8, wrestplank_width],
                 ],
             ],
             finger_joints=[
-                [LEFT, 0, 4],
+                [LEFT, 0, 4, [wall_th, wrestplank_width]],
             ],
         );
 }
@@ -788,14 +788,14 @@ module balance_rail() {
                 // Bottom right
                 [0,0],
                 // Bottom left
-                [-kb_pos.x + wall_th, 0],
+                [-kb_pos.x + hitchpin_block_th, 0],
                 // Finger joint cutout
-                [-kb_pos.x + wall_th, wall_th],
+                [-kb_pos.x + hitchpin_block_th, wall_th],
                 [-kb_pos.x, wall_th],
                 [-kb_pos.x, wall_th*2],
-                [-kb_pos.x + wall_th, wall_th*2],
+                [-kb_pos.x + hitchpin_block_th, wall_th*2],
                 // Top left
-                [-kb_pos.x + wall_th, balance_rail_width],
+                [-kb_pos.x + hitchpin_block_th, balance_rail_width],
                 // Top right
                 [0, balance_rail_width],
                 [0,wall_th*2],
