@@ -806,7 +806,7 @@ module balance_rail() {
                 [0,0],
             ],
             slits = [
-                [51, kb_length, 18*s, 100, 20*s],
+                [55, kb_length, 18*s, 100, 20*s],
             ],
             circles_remove=[
                 for (key_idx=[0:num_keys - 1]) [
@@ -823,8 +823,9 @@ module balance_rail() {
 
 module rack() {
     color(col_wood_dark)
-    // TODO: Rotate vertically, then staggered
     translate(rack_pos)
+        // TODO: Rotate vertically, then staggered
+        //rotate([90, 0, 0])
         lasercutoutSquare(
             thickness=wall_th,
             x=rack_width,
