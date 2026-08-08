@@ -156,7 +156,7 @@ tangent_mortise_radius = 1.5 * s;
 // Hitchpin block thickness (?)
 hitchpin_block_th = wall_th;
 // Hitchpin block height (?)
-hitchpin_block_height = (height - inner_bottom_z) * (2/3);
+hitchpin_block_height = (height - inner_bottom_z) * (3/4);
 // Hitchpin height (?)
 hitchpin_height = hitchpin_block_height * (2/3);
 // Hitchpin radius (?)
@@ -734,13 +734,12 @@ module wrestplank() {
         rotate([0, -90, 0])
         lasercutoutSquare(
             thickness=wrestplank_width,
-            x=hitchpin_block_height,
+            x=wrestplank_height,
             y=inner_width,
             simple_tab_holes = [
                 // Soundboard finger joint cutouts
-                // TODO: fix
                 for (i = [1:3])
-                    [RIGHT, hitchpin_block_height - 14.7, soundboard_pos.y*(i/4), [wall_th, 3, wall_th]],
+                    [RIGHT, soundboard_pos.z - wrestplank_pos.z, soundboard_pos.y*(i/4), [wall_th, soundboard_height, wall_th]],
             ],
             simple_tabs = [
                 // Right tabs connecting to front panel
