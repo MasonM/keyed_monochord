@@ -674,7 +674,7 @@ module hitchpin_block() {
             y=inner_width,
             x=hitchpin_block_height,
             cutouts = [
-                // Rack finger joint cutout
+                // Backrail and rack cutout
                 [
                     backrail_pos.z - wall_th,
                     inner_width - rack_th,
@@ -688,7 +688,7 @@ module hitchpin_block() {
                     wall_th,
                     wall_th,
                 ],
-                // TODO: Hole for nail
+                // TODO: Hole for hitchpin
             ],
             simple_tabs = [
                 // Right tabs connecting to front panel
@@ -739,7 +739,12 @@ module wrestplank() {
             simple_tab_holes = [
                 // Soundboard finger joint cutouts
                 for (i = [1,3])
-                    [RIGHT, soundboard_pos.z - wrestplank_pos.z, soundboard_pos.y*(i/4), [wall_th, soundboard_height, wall_th]],
+                    [
+                        RIGHT,
+                        soundboard_pos.z - wrestplank_pos.z,
+                        soundboard_pos.y*(i/4),
+                        [wall_th, soundboard_height, wall_th]
+                    ],
             ],
             simple_tabs = [
                 // Right tabs connecting to front panel
@@ -935,8 +940,13 @@ module soundboard() {
                 [soundboard_pos.x, second_bend_y],
             ],
             simple_tabs=[
-                for (i = [1,3])
-                [RIGHT, soundboard_pos.x + soundboard_width, soundboard_pos.y*(i/4), [wall_th, wall_th, 3]],
+                // Tabs connecting to wrestplank
+                for (i = [1,3]) [
+                    RIGHT,
+                    soundboard_pos.x + soundboard_width,
+                    soundboard_pos.y*(i/4),
+                    [wall_th, wrestplank_width, soundboard_height]
+                ],
             ],
             circles_remove=[
                 [mousehole_radius, mousehole_pos.x, mousehole_pos.y]
