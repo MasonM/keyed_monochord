@@ -838,12 +838,18 @@ module backrail() {
             x=rack_width,
             y=backrail_width,
             simple_tabs = [
-                // Right tabs connecting to front panel
+                // Left tab connecting to side panel
                 [
                     LEFT,
                     0,
                     backrail_width - (rack_th/2) - wall_th/2,
                     [wall_th, rack_th, wall_th],
+                ],
+                // Right tab connecting to belly rail
+                [
+                    RIGHT,
+                    rack_width,
+                    backrail_width / 2,
                 ],
                 // Tabs connecting to back panel
                 for (i = [1,4])
@@ -890,7 +896,7 @@ module keyboard() {
         key(key_idx);
 }
 
-module belly_rail_section(s) {
+module belly_rail_section(s, simple_tab_holes=[]) {
     length = s[2];
     translate([s[0].x, s[0].y, inner_bottom_z])
         rotate([0, 0, s[1]])
@@ -900,6 +906,7 @@ module belly_rail_section(s) {
             x=length,
             y=support_height,
             slits = s[4],
+            simple_tab_holes = simple_tab_holes,
             simple_tabs=[
                 for (f = support_tab_fractions) each concat(
                     [[DOWN, f*length, 0]],
@@ -910,8 +917,18 @@ module belly_rail_section(s) {
 }
 
 module belly_rail() {
+    // Top section
+    color("pink") belly_rail_section(supports[1], [
+        // Cutout for backrail
+        [
+            UP,
+            supports[1][2]-backrail_width/2,
+            support_height - wall_th,
+            [wall_th, wall_th*2, wall_th]
+        ],
+    ]);
+    // Slanted bottom section
     color("purple") belly_rail_section(supports[0]);
-    color("pink") belly_rail_section(supports[1]);
 }
 
 module soundboard() {
@@ -939,7 +956,6 @@ module soundboard() {
                 [mousehole_radius, mousehole_pos.x, mousehole_pos.y]
             ],
             cutouts=[
-                // TODO: cutout for balance rail
                 // Belly rail cutouts
                 for (s = supports) each support_tab_holes(s),
                 // Bridge tab cutouts
