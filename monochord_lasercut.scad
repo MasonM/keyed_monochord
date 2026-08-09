@@ -366,7 +366,7 @@ function key_lever_bottom_width(key_idx) =
 
 // Center of the balance pin hole in a key lever
 function balance_pin_pos(key_idx) = [
-    (key_lever_x(key_idx) + key_lever_x(key_idx+1)) / 2 - key_clearance,
+    (key_lever_x(key_idx) + key_lever_x(key_idx+1)) / 2 - key_clearance / 2,
     wall_th
 ];
 
