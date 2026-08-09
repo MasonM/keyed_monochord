@@ -579,7 +579,8 @@ module case() {
                     UP,
                     rack_pos.x+rack_width*(i/5),
                     rack_pos.z-wall_th,
-                    [rack_th, rack_th, rack_th],
+                    // EXPERIMENT
+                    [rack_th, rack_th*2, rack_th],
                 ],
                 // Cutouts for the backrail
                 for (i = [1,4]) [
@@ -806,7 +807,7 @@ module balance_rail() {
 
 module rack() {
     color("SaddleBrown")
-    translate(rack_pos)
+    translate(rack_pos) {
         lasercutoutSquare(
             thickness=rack_th,
             x=rack_width,
@@ -828,6 +829,26 @@ module rack() {
                 [LEFT, 1, 1],
             ],
         );
+        // EXPERIMENT
+        translate([0, 0, rack_th]) lasercutoutSquare(
+            thickness=rack_th,
+            x=rack_width,
+            y=rack_height,
+            cutouts=[
+                for (key_idx=[0:num_keys - 1]) [
+                    slot_x(key_idx) - slot_width / 2 - rack_pos.x,
+                    0,
+                    slot_width,
+                    rack_tongue_depth,
+                ]
+            ],
+            simple_tabs = [
+                // Tabs connecting to back panel
+                for (i = [2,3])
+                    [UP, rack_width*(i/5), rack_th, [rack_th, wall_th, rack_th]],
+            ],
+        );
+    }
 }
 
 module backrail() {
