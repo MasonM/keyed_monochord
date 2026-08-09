@@ -167,9 +167,9 @@ hitchpin_radius = 1.05;
 // Slot width (?)
 slot_width = 3*s;
 // Rack thickness (?)
-rack_th = wall_th * 2;
+rack_th = hitchpin_block_th;
 // Rack height (?)
-rack_height = hitchpin_block_height;
+rack_height = rack_th;
 // Rack starting position (XYZ) (?)
 rack_pos = [
     hitchpin_block_th,
@@ -178,21 +178,6 @@ rack_pos = [
 ];
 // Rack width (?)
 rack_width = (slot_x(num_keys - 1) - rack_pos.x) + slot_width * 2;
-// Number of finger joints along the back (UP) edge of the rack and backrail
-rack_fingerjoints = 10;
-// Cutout rectangles matching the [UP, 0, rack_fingerjoints] fingers of the
-// rack/backrail, for use in mating panels. `y` and `h` give the cutout's
-// position and size along the panel's other axis; x positions/widths follow
-// the lasercut library's finger layout (start_up=0: second half-period of
-// each of the `rack_fingerjoints` divisions of rack_width).
-function rack_finger_cutouts(y, h, o) = [
-    for (p = [0:rack_fingerjoints - 1]) [
-        rack_pos.x + (rack_width / rack_fingerjoints) * p + o * (rack_width / (2*rack_fingerjoints)),
-        y,
-        rack_width / (2*rack_fingerjoints),
-        h
-    ]
-];
 
 /* [Key Levers] */
 
@@ -596,14 +581,22 @@ module case() {
                     [ inner_length - wrestplank_width, -wall_th, wrestplank_width, wall_th ],
                     [ inner_length - wrestplank_width, height / 8, wrestplank_width, height / 8 ],
                 ],
-                // Cutouts for the backrail finger joints (local y is
-                // world z minus the bottom board thickness)
-                rack_finger_cutouts(backrail_pos.z - wall_th, wall_th, 0),
-                // Cutouts for the rack finger joints
-                use_rack_tongue
-                    ? rack_finger_cutouts(rack_pos.z - wall_th, wall_th, 1)
-                    : []
             ),
+            simple_tab_holes=[
+                // Cutouts for the rack
+                for (i = [2,3]) [
+                    UP,
+                    rack_pos.x+rack_width*(i/5),
+                    rack_pos.z-wall_th,
+                    [rack_th, rack_th, rack_th],
+                ],
+                // Cutouts for the backrail
+                for (i = [1,4]) [
+                    UP,
+                    backrail_pos.x+rack_width*(i/5),
+                    backrail_pos.z-wall_th,
+                ],
+            ],
             finger_joints=[
                 [LEFT, 1, 4],
                 [RIGHT, 0, 4],
@@ -823,12 +816,10 @@ module balance_rail() {
 module rack() {
     color(col_wood_dark)
     translate(rack_pos)
-        // TODO: Rotate vertically, then staggered
-        //rotate([90, 0, 0])
         lasercutoutSquare(
-            thickness=wall_th,
+            thickness=rack_th,
             x=rack_width,
-            y=rack_th,
+            y=rack_height,
             cutouts=[
                 for (key_idx=[0:num_keys - 1]) [
                     slot_x(key_idx) - slot_width / 2 - rack_pos.x,
@@ -837,9 +828,13 @@ module rack() {
                     rack_tongue_depth,
                 ]
             ],
+            simple_tabs = [
+                // Tabs connecting to back panel
+                for (i = [2,3])
+                    [UP, rack_width*(i/5), rack_th, [rack_th, wall_th, rack_th]],
+            ],
             finger_joints=[
                 [LEFT, 1, 1],
-                [UP, 0, rack_fingerjoints],
             ],
         );
 }
@@ -857,10 +852,11 @@ module backrail() {
                     LEFT,
                     0,
                     backrail_width - (rack_th/2) - wall_th/2,
+                    [wall_th, rack_th, wall_th],
                 ],
-            ],
-            finger_joints=[
-                [UP, 1, rack_fingerjoints],
+                // Tabs connecting to back panel
+                for (i = [1,4])
+                    [UP, rack_width*(i/5), backrail_width],
             ],
         );
 }
