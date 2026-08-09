@@ -39,8 +39,8 @@ show_string = false;
 // consistent with the master's diagram (Plate IX). Of course, this choice of
 // size is only one of many possible options."
 
-inner_length = 644/2;
-wall_th = 3.2;
+inner_length = 644;
+wall_th = 3;
 // Hitchpin block thickness (?)
 hitchpin_block_th = 6;
 
