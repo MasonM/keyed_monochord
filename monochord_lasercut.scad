@@ -294,15 +294,6 @@ mousehole_pos = [
     0
 ];
 
-/* [Colors] */
-col_wood_med = [0.55, 0.35, 0.15];
-col_wood_dark = [0.35, 0.20, 0.10];
-col_wood_light = [0.80, 0.65, 0.40];
-col_brass = [0.85, 0.75, 0.30];
-col_key_lever = [0.90, 0.88, 0.80];
-col_natural = [0.9, 0.9, 0.9];
-col_iron = [0.37, 0.4, 0.41];
-
 /* [Advanced] */
 debug_mode = false;
 $fn = 32;
@@ -654,7 +645,7 @@ module case() {
 }
 
 module hitchpin_block() {
-    color(col_wood_light)
+    color("SandyBrown")
     rotate([0, -90, 0])
     translate([
         wrestplank_pos.z,
@@ -717,7 +708,7 @@ module hitchpin_block() {
 }
 
 module wrestplank() {
-    color(col_wood_dark)
+    color("SaddleBrown")
     translate([
         wrestplank_pos.x + wrestplank_width,
         0,
@@ -773,7 +764,7 @@ module wrestplank() {
 }
 
 module balance_rail() {
-    color(col_wood_dark)
+    color("SaddleBrown")
     translate([kb_pos.x, 0, kb_pos.z - nat_height])
         lasercutoutSquare(
             thickness=wall_th,
@@ -814,7 +805,7 @@ module balance_rail() {
 }
 
 module rack() {
-    color(col_wood_dark)
+    color("SaddleBrown")
     translate(rack_pos)
         lasercutoutSquare(
             thickness=rack_th,
@@ -840,7 +831,7 @@ module rack() {
 }
 
 module backrail() {
-    color(col_wood_dark)
+    color("SaddleBrown")
     translate(backrail_pos)
         lasercutoutSquare(
             thickness=wall_th,
@@ -862,7 +853,7 @@ module backrail() {
 }
 
 module key(key_idx) {
-    color(col_natural)
+    color("AntiqueWhite")
     translate([0, 0, kb_pos.z])
         lasercutout(
             thickness=nat_height,
@@ -924,7 +915,7 @@ module belly_rail() {
 }
 
 module soundboard() {
-    color(col_wood_light)
+    color("SandyBrown")
     translate([0, 0, soundboard_pos.z])
         lasercutout(
             thickness=soundboard_height,
@@ -959,7 +950,7 @@ module soundboard() {
 }
 
 module bridge() {
-    color(col_wood_dark)
+    color("SaddleBrown")
     translate([
         bridge_pos.x,
         bridge_pos.y,
@@ -987,7 +978,7 @@ module bridge() {
 module string() {
     translate(string_pos)
         rotate([0, 90, 0])
-        color(col_brass)
+        color("Gold")
         cylinder(
             h=tuning_pin_x - string_pos.x,
             r=string_radius
@@ -1000,7 +991,7 @@ module tuning_pin() {
         string_pos.y,
         wrestplank_pos.z + wrestplank_height - 5
     ])
-        color(col_iron)
+        color("DarkGray")
         cylinder(h=tuning_pin_height, r=tuning_pin_radius);
 }
 
@@ -1010,7 +1001,7 @@ module hitchpin() {
         string_pos.y,
         wrestplank_pos.z + wrestplank_height * (2/3)
     ])
-        color(col_iron)
+        color("DarkGray")
         cylinder(h=hitchpin_height, r=hitchpin_radius);
 }
 
@@ -1025,7 +1016,7 @@ module tangent(key_idx) {
         string_pos.y,
         kb_pos.z + nat_height
     ])
-        color(col_brass)
+        color("Gold")
         rotate([90, 0, -90])
         linear_extrude(tangent_depth)
             polygon([
@@ -1047,7 +1038,7 @@ module balance_pin_2d(key_idx, radius) {
 }
 
 module balance_pin_3d(key_idx, radius) {
-    color(col_iron)
+    color("DarkGray")
         translate([0, 0, kb_pos.z - (balance_pin_height / 3)])
             linear_extrude(balance_pin_height)
                 balance_pin_2d(key_idx, radius);
