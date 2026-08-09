@@ -251,7 +251,7 @@ bridge_bottom_depth = wall_th;
 // Soundboard depth (?)
 soundboard_depth = inner_width;
 // Soundboard height (?)
-soundboard_height = 3;
+soundboard_height = wall_th;
 // Width of liners for the soundboard to rest on
 soundboard_pos = [
     rack_pos.x + rack_width,
@@ -487,7 +487,6 @@ supports = [
         belly_rail_angle,
         belly_rail_length,
         belly_rail_th,
-        [],
     ],
     // Belly rail leg, under the soundboard's left edge back to the wall
     [
@@ -516,7 +515,7 @@ function support_tab_holes(s) =
                 u * sin(angle) - th * cos(angle)
             ]
         )
-        [corner.x, corner.y, th, th, [0, 0, angle]]
+        [corner.x, corner.y, th, th + 0.1, [0, 0, angle]]
     ];
 
 // Tab holes of all supports, cut into the case bottom
