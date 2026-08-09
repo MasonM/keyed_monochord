@@ -579,8 +579,14 @@ module case() {
                     UP,
                     rack_pos.x+rack_width*(i/5),
                     rack_pos.z-wall_th,
-                    // EXPERIMENT
-                    [rack_th, rack_th*2, rack_th],
+                    [rack_th, rack_th, rack_th],
+                ],
+                // EXPERIMENT
+                for (i = [1.5,3.5]) [
+                    UP,
+                    rack_pos.x+rack_width*(i/5),
+                    rack_pos.z+rack_th-wall_th,
+                    [rack_th, rack_th, rack_th],
                 ],
                 // Cutouts for the backrail
                 for (i = [1,4]) [
@@ -844,7 +850,7 @@ module rack() {
             ],
             simple_tabs = [
                 // Tabs connecting to back panel
-                for (i = [2,3])
+                for (i = [1.5,3.5])
                     [UP, rack_width*(i/5), rack_th, [rack_th, wall_th, rack_th]],
             ],
         );
