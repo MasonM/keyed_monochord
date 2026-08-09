@@ -39,7 +39,7 @@ show_string = false;
 // consistent with the master's diagram (Plate IX). Of course, this choice of
 // size is only one of many possible options."
 
-inner_length = 644;
+inner_length = 322;
 wall_th = 3;
 // Hitchpin block thickness (?)
 hitchpin_block_th = 6;
@@ -165,7 +165,7 @@ hitchpin_radius = 1.05;
 /* [Rack] */
 
 // Slot width (?)
-slot_width = 3*s;
+slot_width = 4*s;
 // Rack thickness (?)
 rack_th = hitchpin_block_th;
 // Rack height (?)
@@ -311,12 +311,6 @@ function key_x(key_idx) =
 
 function key_lever_x(key_idx) =
     key_x(key_idx) + (is_accidental(key_idx-1) ? accidental_width + key_clearance: 0);
-
-function key_size(key_idx) = [
-    (is_accidental(key_idx) ? accidental_width : key_width - key_clearance),
-    (is_accidental(key_idx) ? accidental_depth : key_depth),
-    nat_height + (is_accidental(key_idx) ? accidental_height : 0)
-];
 
 // Transpose from C4 to A4
 function transpose(octave, pitch_class) =
