@@ -17,6 +17,7 @@ show_rack = true;
 show_backrail = true;
 
 show_keyboard = true;
+show_frontboard = true;
 show_balance_rail = true;
 
 show_bridge = true;
@@ -127,7 +128,6 @@ num_naturals = num_keys - cumsum_accidentals[num_keys - 1];
 
 kb_length = inner_length * (4/6);
 key_width = kb_length / num_naturals;
-
 // "The length of these keys was again calculated according to Arnaut ( = about
 // 40 mm)."
 
@@ -138,11 +138,13 @@ kb_pos = [
     -key_depth,
     key_depth
 ];
+keywell_y = kb_pos.z - nat_height;
 kb_end = kb_pos.x + kb_length;
 accidental_width = key_width / 2;
 accidental_height = nat_height / 2;
 accidental_depth = key_depth / 2;
 key_clearance = key_width / num_keys;
+frontboard_height = height - kb_pos.z - nat_height/2;
 
 /* [Tangents] */
 
@@ -597,7 +599,6 @@ module case() {
         );
 
     // Front wall
-    keywell_y = kb_pos.z - nat_height;
     balance_rail_cutout_w = kb_length / balance_rail_fingerjoints / 2;
 
     color("green") translate([0, 0, wall_th]) rotate([90, 0, 0]) lasercutout(
@@ -608,7 +609,7 @@ module case() {
             [inner_length, height],
             [kb_pos.x + kb_length, height],
             [kb_pos.x + kb_length, keywell_y],
-            [kb_pos.x, kb_pos.z - nat_height],
+            [kb_pos.x, keywell_y],
             [kb_pos.x, height],
             [0, height],
             [0, 0],
@@ -620,6 +621,19 @@ module case() {
                 keywell_y - wall_th,
                 balance_rail_cutout_w,
                 wall_th*2
+            ],
+            // Front board
+            [
+                kb_pos.x - wall_th,
+                kb_pos.z + frontboard_height / 2,
+                wall_th*2,
+                wall_th,
+            ],
+            [
+                kb_pos.x + kb_length,
+                kb_pos.z + frontboard_height / 2,
+                wall_th,
+                wall_th,
             ],
             // Deepen finger joints on left side for hitchpin block
             [ 0, 0, hitchpin_block_th, height / 8 ],
@@ -667,7 +681,7 @@ module hitchpin_block() {
                 ],
                 // Balance rail joint cutout
                 [
-                    kb_pos.z - nat_height - wall_th,
+                    keywell_y - wall_th,
                     wall_th,
                     wall_th,
                     wall_th,
@@ -766,7 +780,7 @@ module wrestplank() {
 
 module balance_rail() {
     color("SaddleBrown")
-    translate([kb_pos.x, 0, kb_pos.z - nat_height])
+    translate([kb_pos.x, 0, keywell_y])
         lasercutoutSquare(
             thickness=wall_th,
             x=kb_length,
@@ -900,7 +914,7 @@ module key(key_idx) {
             circles_remove=[
                 [
                     // EXPERIMENT
-                    balance_pin_radius + (0.5 / num_keys * key_idx),
+                    balance_pin_radius + 0.1 + (0.5 / num_keys * key_idx),
                     balance_pin_pos(key_idx).x,
                     balance_pin_pos(key_idx).y
                 ],
@@ -1087,6 +1101,21 @@ module balance_pins() {
         balance_pin_3d(key_idx, balance_pin_radius);
 }
 
+module frontboard() {
+    color("Yellow")
+        translate([kb_pos.x, 0, height-frontboard_height+wall_th])
+        rotate([90, 0, 0])
+        lasercutoutSquare(
+            thickness=wall_th,
+            x=kb_length,
+            y=frontboard_height,
+            simple_tabs=[
+                [LEFT, 0, frontboard_height / 2],
+                [RIGHT, kb_length, frontboard_height / 2],
+            ],
+        );
+}
+
 module key_labels() {
     for (key_idx=[0:num_keys - 1])
         translate([
@@ -1099,7 +1128,6 @@ module key_labels() {
                 text(text=key_label(key_idx), size=(is_accidental(key_idx) ? accidental_width : key_width) / 3);
 }
 
-
 module assembly() {
     if (show_case) case();
     if (show_hitchpin_block) hitchpin_block();
@@ -1111,6 +1139,7 @@ module assembly() {
     if (show_soundboard) soundboard();
     if (show_bridge) bridge();
     if (show_keyboard) keyboard();
+    if (show_frontboard) frontboard();
 
     // Non-functional modules
     if (show_string) string();
