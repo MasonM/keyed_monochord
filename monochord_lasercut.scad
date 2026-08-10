@@ -884,7 +884,8 @@ module backrail() {
                 [
                     RIGHT,
                     rack_width,
-                    backrail_width / 2,
+                    // HACK
+                    10.66*s,
                 ],
                 // Tabs connecting to back panel
                 for (i = [1,4])
@@ -958,8 +959,8 @@ module belly_rail() {
         // Cutout for backrail
         [
             UP,
-            supports[1][2]-backrail_width/2,
-            support_height - wall_th,
+            supports[1][2]*(3/4) + wall_th,
+            backrail_pos.z-wall_th,
             [wall_th, wall_th*2, wall_th]
         ],
     ]);
