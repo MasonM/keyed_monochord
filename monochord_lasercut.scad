@@ -132,7 +132,7 @@ key_width = kb_length / num_naturals;
 // 40 mm)."
 
 key_depth = inner_width * (2/7);
-nat_height = wall_th;
+nat_height = hitchpin_block_th;
 kb_pos = [
     wall_th + inner_length * (1/6),
     -key_depth,
@@ -229,7 +229,7 @@ backrail_pos = [
 /* [Bridge] */
 
 bridge_width = inner_length * (2/14);
-bridge_height = height * (2/7);
+bridge_height = height * (5/14);
 bridge_top_depth = wall_th * (2/14);
 bridge_bottom_depth = wall_th;
 
@@ -510,25 +510,27 @@ if (debug_mode) {
 }
 
 module side_wall() {
-    color("yellow") lasercutoutSquare(
-            thickness=wall_th,
-            x=height,
-            y=inner_width,
-            simple_tabs=[
-                [LEFT, 0, -wall_th/2],
-                [RIGHT, -wall_th, inner_width + wall_th / 2],
-            ],
-            finger_joints=[
-                [LEFT, 0, 4],
-                [UP, 0, 4],
-                [DOWN, 0, 4],
-            ],
-        );
+    color("yellow")
+    lasercutoutSquare(
+        thickness=wall_th,
+        x=height,
+        y=inner_width,
+        simple_tabs=[
+            [LEFT, 0, -wall_th/2],
+            [RIGHT, -wall_th, inner_width + wall_th / 2],
+        ],
+        finger_joints=[
+            [LEFT, 0, 4],
+            [UP, 0, 4],
+            [DOWN, 0, 4],
+        ],
+    );
 }
 
 module case() {
     // Lower bottom
-    color("red") lasercutoutSquare(
+    color("red")
+    lasercutoutSquare(
         thickness=wall_th,
         x=inner_length,
         y=inner_width,
@@ -554,54 +556,59 @@ module case() {
     );
 
     // Back wall
-    color("blue") translate([0, inner_width + wall_th, wall_th]) rotate([90, 0, 0])
-        lasercutoutSquare(
-            thickness=wall_th,
-            x=inner_length,
-            y=height,
-            cutouts = concat(
-                [
-                    // Deepen finger joints on left side for hitchpin block
-                    [ 0, -wall_th, wall_th, wall_th ],
-                    [ 0, height / 8, hitchpin_block_th, height / 8 ],
-                    // Deepen finger joints on right side for wrestplank
-                    [ inner_length - wrestplank_width, -wall_th, wrestplank_width, wall_th ],
-                    [ inner_length - wrestplank_width, height / 8, wrestplank_width, height / 8 ],
-                ],
-            ),
-            simple_tab_holes=[
-                // Cutouts for the rack
-                for (i = [2,3]) [
-                    UP,
-                    rack_pos.x+rack_width*(i/5),
-                    rack_pos.z-wall_th,
-                    [rack_th, rack_th, rack_th],
-                ],
-                // EXPERIMENT
-                for (i = [1.5,3.5]) [
-                    UP,
-                    rack_pos.x+rack_width*(i/5),
-                    rack_pos.z+rack_th-wall_th,
-                    [rack_th, rack_th, rack_th],
-                ],
-                // Cutouts for the backrail
-                for (i = [1,4]) [
-                    UP,
-                    backrail_pos.x+rack_width*(i/5),
-                    backrail_pos.z-wall_th,
-                ],
+    color("blue")
+    translate([0, inner_width + wall_th, wall_th])
+    rotate([90, 0, 0])
+    lasercutoutSquare(
+        thickness=wall_th,
+        x=inner_length,
+        y=height,
+        cutouts = concat(
+            [
+                // Deepen finger joints on left side for hitchpin block
+                [ 0, -wall_th, wall_th, wall_th ],
+                [ 0, height / 8, hitchpin_block_th, height / 8 ],
+                // Deepen finger joints on right side for wrestplank
+                [ inner_length - wrestplank_width, -wall_th, wrestplank_width, wall_th ],
+                [ inner_length - wrestplank_width, height / 8, wrestplank_width, height / 8 ],
             ],
-            finger_joints=[
-                [LEFT, 1, 4],
-                [RIGHT, 0, 4],
-                [DOWN, 1, 15]
+        ),
+        simple_tab_holes=[
+            // Cutouts for the rack
+            for (i = [2,3]) [
+                UP,
+                rack_pos.x+rack_width*(i/5),
+                rack_pos.z-wall_th,
+                [rack_th, rack_th, rack_th],
             ],
-        );
+            // EXPERIMENT
+            for (i = [1.5,3.5]) [
+                UP,
+                rack_pos.x+rack_width*(i/5),
+                rack_pos.z+rack_th-wall_th,
+                [rack_th, rack_th, rack_th],
+            ],
+            // Cutouts for the backrail
+            for (i = [1,4]) [
+                UP,
+                backrail_pos.x+rack_width*(i/5),
+                backrail_pos.z-wall_th,
+            ],
+        ],
+        finger_joints=[
+            [LEFT, 1, 4],
+            [RIGHT, 0, 4],
+            [DOWN, 1, 15]
+        ],
+    );
 
     // Front wall
     balance_rail_cutout_w = kb_length / balance_rail_fingerjoints / 2;
 
-    color("green") translate([0, 0, wall_th]) rotate([90, 0, 0]) lasercutout(
+    color("green")
+    translate([0, 0, wall_th])
+    rotate([90, 0, 0])
+    lasercutout(
         thickness=wall_th,
         points = [
             [0,0],
@@ -625,13 +632,13 @@ module case() {
             // Front board
             [
                 kb_pos.x - wall_th,
-                kb_pos.z + frontboard_height / 2,
+                kb_pos.z + nat_height + wall_th /2 ,
                 wall_th*2,
                 wall_th,
             ],
             [
                 kb_pos.x + kb_length,
-                kb_pos.z + frontboard_height / 2,
+                kb_pos.z + nat_height + wall_th /2 ,
                 wall_th,
                 wall_th,
             ],
@@ -650,11 +657,13 @@ module case() {
     );
 
     // Left wall
-    translate([0, 0, wall_th]) rotate([0, -90, 0])
+    translate([0, 0, wall_th])
+    rotate([0, -90, 0])
         side_wall();
 
     // Right wall
-    translate([inner_length + wall_th, 0, wall_th]) rotate([0, -90, 0])
+    translate([inner_length + wall_th, 0, wall_th])
+    rotate([0, -90, 0])
         side_wall();
 
 }
@@ -961,7 +970,7 @@ module belly_rail() {
             UP,
             supports[1][2]*(3/4) + wall_th,
             backrail_pos.z-wall_th,
-            [wall_th, wall_th*2, wall_th]
+            [wall_th, wall_th*4, wall_th]
         ],
     ]);
     // Slanted bottom section
@@ -1104,7 +1113,7 @@ module balance_pins() {
 
 module frontboard() {
     color("Yellow")
-        translate([kb_pos.x, 0, height-frontboard_height+wall_th])
+        translate([kb_pos.x, 0, kb_pos.z + nat_height])
         rotate([90, 0, 0])
         lasercutoutSquare(
             thickness=wall_th,
