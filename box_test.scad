@@ -1,5 +1,11 @@
 include <./lasercut/lasercut.scad>;
 
+show_bottom_end = true;
+show_top_end = true;
+show_left_side = true;
+show_right_side = true;
+show_top_side = true;
+show_bottom_side = true;
 thickness = 3.2;
 x = 25;
 y = 25;
@@ -12,10 +18,9 @@ function fj(start_up) = [
     [LEFT, start_up[2], num_fingers],
     [RIGHT, start_up[3], num_fingers],
 ];
-color("Gold",0.75)
 translate([thickness,thickness,0]) {
     // Bottom end panel
-    lasercutoutSquare(
+    if (show_bottom_end) color("Gold",0.75) lasercutoutSquare(
         thickness=thickness, x=x-thickness*2, y=y-thickness*2,
         finger_joints = fj([1,1,1,0]),
         circles_remove=[[ 1.2, 10, 10 ]],
@@ -26,7 +31,7 @@ translate([thickness,thickness,0]) {
         ],
     );
     // Top end panel
-    translate([0, 0, z-thickness]) lasercutoutSquare(
+    if (show_top_end) color("blue",0.75) translate([0, 0, z-thickness]) lasercutoutSquare(
         thickness=thickness, x=x-thickness*2, y=y-thickness*2,
         finger_joints = fj([0,1,1,0]),
         circles_remove=[
@@ -39,7 +44,7 @@ translate([thickness,thickness,0]) {
         ],
     );
     // Left side panel
-    translate([0,0,thickness]) rotate([90,0,0]) lasercutoutSquare(
+    if (show_left_side) color("red", 0.75) translate([0,0,thickness]) rotate([90,0,0]) lasercutoutSquare(
         thickness=thickness, x=x-thickness*2, y=z-thickness*2,
         finger_joints = fj([1,0,1,0]),
         circles_remove=[
@@ -49,7 +54,7 @@ translate([thickness,thickness,0]) {
         ],
     );
     // Right side panel
-    translate([0,y-thickness,thickness]) rotate([90,0,0]) lasercutoutSquare(
+    if (show_right_side) color("green", 0.75) translate([0,y-thickness,thickness]) rotate([90,0,0]) lasercutoutSquare(
         thickness=thickness, x=x-thickness*2, y=z-thickness*2,
         finger_joints = fj([1,1,1,0]),
         circles_remove=[
@@ -64,7 +69,7 @@ translate([thickness,thickness,0]) {
         ],
     );
     // Top side panel
-    translate([0,0,thickness]) rotate([0,-90,0]) lasercutoutSquare(
+    if (show_top_side) color("purple", 0.75) translate([0,0,thickness]) rotate([0,-90,0]) lasercutoutSquare(
         thickness=thickness, x=z-thickness*2, y=y-thickness*2,
         finger_joints = fj([0,1,0,1]),
         circles_remove=[
@@ -76,7 +81,7 @@ translate([thickness,thickness,0]) {
         ],
     );
     // Bottom side panel
-    translate([x-thickness,0,thickness]) rotate([0,-90,0]) lasercutoutSquare(
+    if (show_bottom_side) color("brown", 0.75) translate([x-thickness,0,thickness]) rotate([0,-90,0]) lasercutoutSquare(
         thickness=thickness, x=z-thickness*2, y=y-thickness*2,
         finger_joints = fj([0,1,0,1]),
         circles_remove=[
