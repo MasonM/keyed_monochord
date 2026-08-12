@@ -512,7 +512,7 @@ if (debug_mode) {
 }
 
 module side_wall() {
-    color("yellow")
+    color("yellow", 0.75)
     lasercutoutSquare(
         thickness=wall_th,
         x=height,
@@ -531,7 +531,7 @@ module side_wall() {
 
 module case() {
     // Lower bottom
-    color("red")
+    color("red", 0.75)
     lasercutoutSquare(
         thickness=wall_th,
         x=inner_length,
@@ -558,7 +558,7 @@ module case() {
     );
 
     // Back wall
-    color("blue")
+    color("blue", 0.75)
     translate([0, inner_width + wall_th, wall_th])
     rotate([90, 0, 0])
     lasercutoutSquare(
@@ -607,7 +607,7 @@ module case() {
     // Front wall
     balance_rail_cutout_w = kb_length / balance_rail_fingerjoints / 2;
 
-    color("green")
+    color("green", 0.75)
     translate([0, 0, wall_th])
     rotate([90, 0, 0])
     lasercutout(
@@ -855,7 +855,8 @@ module rack() {
             ],
         );
         // EXPERIMENT
-        translate([0, 0, rack_th]) lasercutoutSquare(
+        translate([0, 0, rack_th])
+        lasercutoutSquare(
             thickness=rack_th,
             x=rack_width,
             y=rack_height,
@@ -1114,7 +1115,7 @@ module balance_pins() {
 }
 
 module frontboard() {
-    color("Yellow")
+    color("Yellow", 0.75)
         translate(frontboard_pos)
         rotate([90, 0, 0])
         lasercutoutSquare(
