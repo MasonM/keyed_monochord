@@ -144,7 +144,9 @@ accidental_width = key_width / 2;
 accidental_height = nat_height / 2;
 accidental_depth = key_depth / 2;
 key_clearance = key_width / num_keys;
-frontboard_height = height - kb_pos.z - nat_height/2;
+frontboard_clearance = 3*s;
+frontboard_pos = [kb_pos.x, 0, kb_pos.z - wall_th + nat_height + frontboard_clearance];
+frontboard_height = height + wall_th - frontboard_pos.z;
 
 /* [Tangents] */
 
@@ -632,13 +634,13 @@ module case() {
             // Front board
             [
                 kb_pos.x - wall_th,
-                kb_pos.z + nat_height + wall_th /2 ,
+                frontboard_pos.z + frontboard_height / 2 - wall_th*1.5,
                 wall_th*2,
                 wall_th,
             ],
             [
                 kb_pos.x + kb_length,
-                kb_pos.z + nat_height + wall_th /2 ,
+                frontboard_pos.z + frontboard_height / 2 - wall_th*1.5,
                 wall_th,
                 wall_th,
             ],
@@ -905,7 +907,7 @@ module backrail() {
 
 module key(key_idx) {
     color("AntiqueWhite")
-    translate([0, 0, kb_pos.z])
+    translate([0, 0, kb_pos.z - wall_th])
         lasercutout(
             thickness=nat_height,
             points=key_points(key_idx),
@@ -1113,7 +1115,7 @@ module balance_pins() {
 
 module frontboard() {
     color("Yellow")
-        translate([kb_pos.x, 0, kb_pos.z + nat_height])
+        translate(frontboard_pos)
         rotate([90, 0, 0])
         lasercutoutSquare(
             thickness=wall_th,
