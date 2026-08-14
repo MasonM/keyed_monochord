@@ -225,6 +225,7 @@ belly_rail_th = wall_th;
 
 // Backrail width (?)
 backrail_width = wall_th * 4;
+// Backrail height
 backrail_pos = [
     rack_pos.x,
     inner_width - backrail_width,
