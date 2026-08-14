@@ -160,7 +160,7 @@ tangent_top_width = tangent_height / 2;
 tangent_bottom_width = tangent_top_width / 4;
 tangent_depth = wall_th / 10;
 tangent_top_string_clearance = wall_th / 10;
-tangent_mortise_radius = 1.5 * s;
+tangent_mortise_radius = 1 * s;
 
 /* [Hitchpin Block] */
 
