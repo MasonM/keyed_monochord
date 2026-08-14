@@ -1145,6 +1145,7 @@ module tangents() {
 }
 
 module tangent(key_idx) {
+    //translate([string_contact_x(key_idx), string_pos.y, kb_pos.z + nat_height + tangent_height]) cube([0.1,10,10]);
     translate([
         tangent_x(key_idx),
         string_pos.y,
