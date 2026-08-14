@@ -860,6 +860,7 @@ module rack() {
             thickness=rack_th,
             x=rack_width,
             y=rack_height,
+            flat_adjust=[0, rack_width],
             cutouts=[
                 for (key_idx=[0:num_keys - 1]) [
                     slot_x(key_idx) - slot_width / 2 - rack_pos.x,
