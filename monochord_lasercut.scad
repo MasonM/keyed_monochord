@@ -185,8 +185,9 @@ rack_pos = [
     inner_width - rack_th,
     kb_pos.z
 ];
-// Rack width (?)
-rack_width = (slot_x(num_keys - 1) - rack_pos.x) + slot_width * 2;
+// Rack width (?) (the rack ends at the last key's string contact point,
+// where its rack slot also sits)
+rack_width = (string_contact_x(num_keys - 1) - rack_pos.x) + slot_width * 2;
 
 /* [Key Levers] */
 
@@ -203,28 +204,29 @@ key_lever_top_y = inner_width - (use_rack_tongue ? rack_th : wall_th * (1/3)) - 
 balance_rail_fingerjoints = 10;
 balance_rail_width = inner_width * (2/14);
 
-// Rack slot/tongue positions are decoupled from the tangent positions:
+// Rack slot positions are decoupled from the string contact positions:
 // the tangents crowd together at the treble end (B4 and C5 are only
 // ~2.5 mm apart at this scale), which would leave slivers of wood
 // between adjacent rack slots that a laser cut would burn away. Instead
-// each slot sits at its tangent position unless that would bring it
-// closer than rack_slot_min_pitch to its treble-side neighbor, in which
-// case it is pushed toward the bass just far enough (anchored at the
-// last key's tangent and cascading downward). Each affected key lever
-// jogs sideways from its tangent line to its rack slot between
-// third_bend_y and key_lever_top_y. Tangent positions (and therefore
-// the tuning) are unchanged.
+// each slot sits at its key's string contact position unless that would
+// bring it closer than rack_slot_min_pitch to its treble-side neighbor,
+// in which case it is pushed toward the bass just far enough (anchored
+// at the last key and cascading downward). Each affected key lever jogs
+// sideways from its tangent line to its rack slot between third_bend_y
+// and key_lever_top_y. String contact positions (and therefore the
+// tuning) are unchanged.
 
 // Minimum wood web left between adjacent rack slots
 rack_min_web = wall_th;
 rack_slot_min_pitch = slot_width + rack_min_web;
+// Center of the physical slot in the rack that guides this key's lever
 function rack_slot_x(key_idx) =
     key_idx == num_keys - 1
-        ? slot_x(key_idx)
-        : min(slot_x(key_idx), rack_slot_x(key_idx + 1) - rack_slot_min_pitch);
-// Width of the lever top where it passes through the rack, pinched by
-// the neighboring rack slots (mirrors key_lever_top_width)
-function key_lever_rack_top_width(key_idx) =
+        ? string_contact_x(key_idx)
+        : min(string_contact_x(key_idx), rack_slot_x(key_idx + 1) - rack_slot_min_pitch);
+// Width of the key lever where it passes through the rack, pinched by
+// the neighboring rack slots (mirrors key_lever_tangent_width)
+function key_lever_rack_width(key_idx) =
     let (
         distance_from_left = key_idx == 0 ? 999 : rack_slot_x(key_idx) - rack_slot_x(key_idx - 1),
         distance_from_right = key_idx == num_keys - 1 ? 999 : rack_slot_x(key_idx + 1) - rack_slot_x(key_idx)
@@ -314,7 +316,8 @@ string_pos = [
 
 // Where the key lever starts jogging from its tangent line to its rack
 // slot; kept above the tangent mortise so the tangent region stays
-// centered on slot_x (see the rack_slot_x comment in [Key Levers])
+// centered on string_contact_x (see the rack_slot_x comment in
+// [Key Levers])
 third_bend_y = string_pos.y + tangent_height / 2;
 
 /* [Bridge] */
@@ -381,12 +384,16 @@ function key_frequency(key_idx, reference_frequency_a4=1) =
 function sounding_length(key_idx) =
     key_frequency(0) * vibrating_string_length_g2 / key_frequency(key_idx);
 
-function slot_x(key_idx) = bridge_x - sounding_length(key_idx);
+// Where the tangent must contact the string to sound the key's pitch.
+// Determined purely by the tuning; the physical rack slot that guides
+// the key lever may sit elsewhere (see rack_slot_x).
+function string_contact_x(key_idx) = bridge_x - sounding_length(key_idx);
 
 // Return x position of tangent for given key
-function tangent_x(key_idx) = slot_x(key_idx) + tangent_depth/2;
+function tangent_x(key_idx) = string_contact_x(key_idx) + tangent_depth/2;
 
-function key_lever_top_width(key_idx) =
+// Width of the key lever at the tangent, pinched by neighboring tangents
+function key_lever_tangent_width(key_idx) =
     let (
         cur_tangent_x = tangent_x(key_idx),
         left_tangent_x = key_idx == 0 ? -999 : tangent_x(key_idx-1),
@@ -436,15 +443,15 @@ function key_front_points(key_idx) =
 function key_points(key_idx) =
     let (
         // Width of the tangent region (pinched by neighboring tangents)
-        top_width = key_lever_top_width(key_idx),
+        tangent_width = key_lever_tangent_width(key_idx),
         // Width of the rack region (pinched by neighboring rack slots)
-        rack_top_width = key_lever_rack_top_width(key_idx),
+        lever_rack_width = key_lever_rack_width(key_idx),
         bottom_width = key_lever_bottom_width(key_idx),
         first_bend_y = wall_th,
         // Left edge of the tangent region, centered on the tangent line
-        tangent_left_x = slot_x(key_idx) - top_width/2,
+        tangent_left_x = string_contact_x(key_idx) - tangent_width/2,
         // Lever top, centered on the rack slot
-        top = [rack_slot_x(key_idx) - rack_top_width/2, key_lever_top_y],
+        top = [rack_slot_x(key_idx) - lever_rack_width/2, key_lever_top_y],
         bottom_x = key_lever_x(key_idx),
         top_rack_tongue_x = rack_slot_x(key_idx) - rack_tongue_width / 2,
         bottom_rack_tongue_y = top.y + (rack_tongue_depth * (use_rack_tongue ? 1 : -1))
@@ -462,9 +469,9 @@ function key_points(key_idx) =
             [top_rack_tongue_x + rack_tongue_width, bottom_rack_tongue_y],
             [top_rack_tongue_x + rack_tongue_width, top.y],
 
-            [top.x + rack_top_width, top.y],
-            [tangent_left_x + top_width, third_bend_y],
-            [tangent_left_x + top_width, second_bend_y],
+            [top.x + lever_rack_width, top.y],
+            [tangent_left_x + tangent_width, third_bend_y],
+            [tangent_left_x + tangent_width, second_bend_y],
             [bottom_x + bottom_width, first_bend_y],
         ],
         key_front_points(key_idx)
@@ -552,7 +559,8 @@ if (debug_mode) {
             key_label=key_label(key_idx),
             sounding_length=sounding_length(key_idx),
             key_frequency=key_frequency(key_idx, 440),
-            slot_x=slot_x(key_idx),
+            string_contact_x=string_contact_x(key_idx),
+            rack_slot_x=rack_slot_x(key_idx),
             transpose=transpose(key_octave_and_pitch_class[key_idx][0], key_octave_and_pitch_class[key_idx][1]),
         );
     }
