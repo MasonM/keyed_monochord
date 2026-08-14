@@ -34,6 +34,12 @@ show_hitchpin = false;
 show_string = false;
 
 /* [Main Dimensions] */
+
+// Thickness of thin plywood
+wall_th = 3;
+// Thickness of thick plywood
+thick_th = 6;
+
 // "The internal length used for our reconstruction is 644 mm (the external
 // length is 664 mm), which was determined by adopting a multiple of the number
 // 14, as used by Arnaut for dividing the length, resulting in a 1:3 ratio
@@ -41,9 +47,8 @@ show_string = false;
 // size is only one of many possible options."
 
 inner_length = 322;
-wall_th = 3;
 // Hitchpin block thickness (?)
-hitchpin_block_th = 6;
+hitchpin_block_th = thick_th;
 
 // Scale factor for constants calculated relative to original length (can't use scale() with lasercut.scad)
 s = inner_length / 644;
@@ -132,7 +137,7 @@ key_width = kb_length / num_naturals;
 // 40 mm)."
 
 key_depth = inner_width * (2/7);
-nat_height = hitchpin_block_th;
+nat_height = thick_th;
 kb_pos = [
     wall_th + inner_length * (1/6),
     -key_depth,
@@ -171,7 +176,7 @@ hitchpin_radius = 1.05;
 // Slot width (?)
 slot_width = 4*s;
 // Rack thickness (?)
-rack_th = hitchpin_block_th;
+rack_th = thick_th;
 // Rack height (?)
 rack_height = rack_th;
 // Rack starting position (XYZ) (?)
