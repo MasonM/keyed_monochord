@@ -141,16 +141,16 @@ nat_height = thick_th;
 kb_pos = [
     wall_th + inner_length * (1/6),
     -key_depth,
-    key_depth
+    key_depth - wall_th
 ];
-keywell_y = kb_pos.z - nat_height;
+keywell_y = key_depth - nat_height;
 kb_end = kb_pos.x + kb_length;
 accidental_width = key_width / 2;
 accidental_height = nat_height / 2;
 accidental_depth = key_depth / 2;
 key_clearance = key_width / num_keys;
 frontboard_clearance = 3*s;
-frontboard_pos = [kb_pos.x, 0, kb_pos.z - wall_th + nat_height + frontboard_clearance];
+frontboard_pos = [kb_pos.x, 0, kb_pos.z + nat_height + frontboard_clearance];
 frontboard_height = height + wall_th - frontboard_pos.z;
 
 /* [Tangents] */
@@ -225,8 +225,6 @@ belly_rail_th = wall_th;
 
 // Backrail width (?)
 backrail_width = wall_th * 4;
-// Backrail height
-backrail_height = kb_pos.z - inner_bottom_z;
 backrail_pos = [
     rack_pos.x,
     inner_width - backrail_width,
@@ -914,7 +912,7 @@ module backrail() {
 
 module key(key_idx) {
     color("AntiqueWhite")
-    translate([0, 0, kb_pos.z - wall_th])
+    translate([0, 0, kb_pos.z])
         lasercutout(
             thickness=nat_height,
             points=key_points(key_idx),
