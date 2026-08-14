@@ -635,7 +635,7 @@ module case() {
                 balance_rail_cutout_w,
                 wall_th*2
             ],
-            // Front board
+            // Front board left
             [
                 kb_pos.x - wall_th,
                 frontboard_pos.z + frontboard_height / 2 - wall_th*1.5,
@@ -643,8 +643,21 @@ module case() {
                 wall_th,
             ],
             [
+                kb_pos.x - wall_th,
+                frontboard_pos.z + frontboard_height - wall_th*2,
+                wall_th*2,
+                wall_th,
+            ],
+            // Front board right
+            [
                 kb_pos.x + kb_length,
                 frontboard_pos.z + frontboard_height / 2 - wall_th*1.5,
+                wall_th,
+                wall_th,
+            ],
+            [
+                kb_pos.x + kb_length,
+                frontboard_pos.z + frontboard_height - wall_th*2,
                 wall_th,
                 wall_th,
             ],
@@ -1129,7 +1142,9 @@ module frontboard() {
             y=frontboard_height,
             simple_tabs=[
                 [LEFT, 0, frontboard_height / 2],
+                [LEFT, 0, frontboard_height - wall_th / 2],
                 [RIGHT, kb_length, frontboard_height / 2],
+                [RIGHT, kb_length, frontboard_height - wall_th / 2],
             ],
         );
 }
