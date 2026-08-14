@@ -26,8 +26,6 @@ HEADER = '''\
         <kerf Value="0.1"/>
         <dotTime Value="1"/>
         <priority Value="0"/>
-        <doOutput Value="0"/>
-        <hide Value="1"/>
         <tabCount Value="1"/>
         <tabCountMax Value="1"/>
     </CutSetting>
@@ -41,6 +39,7 @@ HEADER = '''\
         <kerf Value="0.1"/>
         <dotTime Value="1"/>
         <priority Value="1"/>
+        <doOutput Value="0"/>
         <tabCount Value="1"/>
         <tabCountMax Value="1"/>
     </CutSetting>
