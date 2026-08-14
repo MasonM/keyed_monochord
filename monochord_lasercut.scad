@@ -203,6 +203,36 @@ key_lever_top_y = inner_width - (use_rack_tongue ? rack_th : wall_th * (1/3)) - 
 balance_rail_fingerjoints = 10;
 balance_rail_width = inner_width * (2/14);
 
+// Rack slot/tongue positions are decoupled from the tangent positions:
+// the tangents crowd together at the treble end (B4 and C5 are only
+// ~2.5 mm apart at this scale), which would leave slivers of wood
+// between adjacent rack slots that a laser cut would burn away. Instead
+// each slot sits at its tangent position unless that would bring it
+// closer than rack_slot_min_pitch to its treble-side neighbor, in which
+// case it is pushed toward the bass just far enough (anchored at the
+// last key's tangent and cascading downward). Each affected key lever
+// jogs sideways from its tangent line to its rack slot between
+// third_bend_y and key_lever_top_y. Tangent positions (and therefore
+// the tuning) are unchanged.
+
+// Minimum wood web left between adjacent rack slots
+rack_min_web = wall_th;
+rack_slot_min_pitch = slot_width + rack_min_web;
+function rack_slot_x(key_idx) =
+    key_idx == num_keys - 1
+        ? slot_x(key_idx)
+        : min(slot_x(key_idx), rack_slot_x(key_idx + 1) - rack_slot_min_pitch);
+// Width of the lever top where it passes through the rack, pinched by
+// the neighboring rack slots (mirrors key_lever_top_width)
+function key_lever_rack_top_width(key_idx) =
+    let (
+        distance_from_left = key_idx == 0 ? 999 : rack_slot_x(key_idx) - rack_slot_x(key_idx - 1),
+        distance_from_right = key_idx == num_keys - 1 ? 999 : rack_slot_x(key_idx + 1) - rack_slot_x(key_idx)
+    )
+    min(distance_from_left, distance_from_right, key_width) - key_lever_side_clearance;
+// (third_bend_y, where the lever starts jogging from its tangent line to
+// its rack slot, is defined after string_pos below)
+
 /* [Wrestplank] */
 
 // Wrestplank width (?)
@@ -281,6 +311,11 @@ string_pos = [
     wall_th + inner_width * (3/5),
     soundboard_pos.z + soundboard_height + bridge_height + string_radius,
 ];
+
+// Where the key lever starts jogging from its tangent line to its rack
+// slot; kept above the tangent mortise so the tangent region stays
+// centered on slot_x (see the rack_slot_x comment in [Key Levers])
+third_bend_y = string_pos.y + tangent_height / 2;
 
 /* [Bridge] */
 
@@ -400,18 +435,25 @@ function key_front_points(key_idx) =
 // in monochord.scad.
 function key_points(key_idx) =
     let (
+        // Width of the tangent region (pinched by neighboring tangents)
         top_width = key_lever_top_width(key_idx),
+        // Width of the rack region (pinched by neighboring rack slots)
+        rack_top_width = key_lever_rack_top_width(key_idx),
         bottom_width = key_lever_bottom_width(key_idx),
         first_bend_y = wall_th,
-        top = [slot_x(key_idx) - top_width/2, key_lever_top_y],
+        // Left edge of the tangent region, centered on the tangent line
+        tangent_left_x = slot_x(key_idx) - top_width/2,
+        // Lever top, centered on the rack slot
+        top = [rack_slot_x(key_idx) - rack_top_width/2, key_lever_top_y],
         bottom_x = key_lever_x(key_idx),
-        top_rack_tongue_x = slot_x(key_idx) - rack_tongue_width / 2,
+        top_rack_tongue_x = rack_slot_x(key_idx) - rack_tongue_width / 2,
         bottom_rack_tongue_y = top.y + (rack_tongue_depth * (use_rack_tongue ? 1 : -1))
     )
     concat(
         [
             [bottom_x, first_bend_y],
-            [top.x, second_bend_y],
+            [tangent_left_x, second_bend_y],
+            [tangent_left_x, third_bend_y],
             top,
 
             // Rack tongue or slot cutout, depending on use_rack_tongue
@@ -420,8 +462,9 @@ function key_points(key_idx) =
             [top_rack_tongue_x + rack_tongue_width, bottom_rack_tongue_y],
             [top_rack_tongue_x + rack_tongue_width, top.y],
 
-            [top.x + top_width, top.y],
-            [top.x + top_width, second_bend_y],
+            [top.x + rack_top_width, top.y],
+            [tangent_left_x + top_width, third_bend_y],
+            [tangent_left_x + top_width, second_bend_y],
             [bottom_x + bottom_width, first_bend_y],
         ],
         key_front_points(key_idx)
@@ -843,7 +886,7 @@ module rack() {
             y=rack_height,
             cutouts=[
                 for (key_idx=[0:num_keys - 1]) [
-                    slot_x(key_idx) - slot_width / 2 - rack_pos.x,
+                    rack_slot_x(key_idx) - slot_width / 2 - rack_pos.x,
                     0,
                     slot_width,
                     rack_tongue_depth,
@@ -867,7 +910,7 @@ module rack() {
             flat_adjust=[0, rack_width],
             cutouts=[
                 for (key_idx=[0:num_keys - 1]) [
-                    slot_x(key_idx) - slot_width / 2 - rack_pos.x,
+                    rack_slot_x(key_idx) - slot_width / 2 - rack_pos.x,
                     0,
                     slot_width,
                     rack_tongue_depth,
