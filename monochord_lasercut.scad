@@ -264,7 +264,7 @@ string_radius = 0.4;
 // Tuning pin radius (?)
 tuning_pin_radius = hitchpin_radius;
 tuning_pin_x = wrestplank_pos.x + (wrestplank_width / 2);
-tuning_pin_height = height - wrestplank_pos.z - wrestplank_height;
+tuning_pin_height = wrestplank_height * (2/3);
 
 // Balance pin height (?)
 balance_pin_height = 20;
@@ -1059,7 +1059,7 @@ module tuning_pin() {
     translate([
         tuning_pin_x,
         string_pos.y,
-        wrestplank_pos.z + wrestplank_height - 5
+        wrestplank_pos.z + wrestplank_height * (2/3)
     ])
         color("DarkGray")
         cylinder(h=tuning_pin_height, r=tuning_pin_radius);
