@@ -8,9 +8,11 @@ layer named "Thin" or "Thick" with the cut settings embedded below.
 Usage: make_lbrn2.py thin.svg thick.svg output.lbrn2
 """
 
+import os
 import re
 import sys
 
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), 'lasercut'))
 from pack_svg import parse_subpaths
 
 HEADER = '''\
