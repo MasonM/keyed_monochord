@@ -178,12 +178,12 @@ hitchpin_radius = 2.1;
 slot_width = 4*s;
 // Rack thickness (?)
 rack_th = thick_th;
-// Rack height (?)
-rack_height = rack_th;
+// Rack depth (?)
+rack_depth = rack_th*2;
 // Rack starting position (XYZ) (?)
 rack_pos = [
     hitchpin_block_th,
-    inner_width - rack_th,
+    inner_width - rack_depth,
     kb_pos.z
 ];
 // Rack width (?) (the rack ends at the last key's string contact point,
@@ -199,9 +199,8 @@ second_bend_y = inner_width * (2/5);
 key_lever_side_clearance = slot_width / 6;
 key_lever_top_clearance = slot_width / 2;
 rack_tongue_width = slot_width * (2/3);
-rack_tongue_depth = rack_th * (2/3);
-use_rack_tongue = true;
-key_lever_top_y = inner_width - (use_rack_tongue ? rack_th : wall_th * (1/3)) - key_lever_top_clearance;
+rack_tongue_depth = rack_depth * (2/3);
+key_lever_top_y = inner_width - rack_depth - key_lever_top_clearance;
 balance_rail_fingerjoints = 10;
 balance_rail_width = inner_width * (2/14);
 
@@ -257,7 +256,7 @@ belly_rail_th = wall_th;
 /* [Backrail] */
 
 // Backrail width (?)
-backrail_width = wall_th * 4;
+backrail_width = rack_depth*1.5;
 // Backrail height
 backrail_pos = [
     rack_pos.x,
@@ -455,7 +454,7 @@ function key_points(key_idx) =
         top = [rack_slot_x(key_idx) - lever_rack_width/2, key_lever_top_y],
         bottom_x = key_lever_x(key_idx),
         top_rack_tongue_x = rack_slot_x(key_idx) - rack_tongue_width / 2,
-        bottom_rack_tongue_y = top.y + (rack_tongue_depth * (use_rack_tongue ? 1 : -1))
+        bottom_rack_tongue_y = top.y + rack_tongue_depth
     )
     concat(
         [
@@ -464,7 +463,7 @@ function key_points(key_idx) =
             [tangent_left_x, third_bend_y],
             top,
 
-            // Rack tongue or slot cutout, depending on use_rack_tongue
+            // Rack tongue
             [top_rack_tongue_x, top.y],
             [top_rack_tongue_x, bottom_rack_tongue_y],
             [top_rack_tongue_x + rack_tongue_width, bottom_rack_tongue_y],
@@ -905,7 +904,7 @@ module rack() {
         lasercutoutSquare(
             thickness=rack_th,
             x=rack_width,
-            y=rack_height,
+            y=rack_depth,
             cutouts=[
                 for (key_idx=[0:num_keys - 1]) [
                     rack_slot_x(key_idx) - slot_width / 2 - rack_pos.x,
@@ -928,7 +927,7 @@ module rack() {
         lasercutoutSquare(
             thickness=rack_th,
             x=rack_width,
-            y=rack_height,
+            y=rack_depth,
             flat_adjust=[0, rack_width],
             cutouts=[
                 for (key_idx=[0:num_keys - 1]) [
@@ -967,7 +966,7 @@ module backrail() {
                     RIGHT,
                     rack_width,
                     // HACK
-                    10.66*s,
+                    22.66*s,
                 ],
                 // Tabs connecting to back panel
                 for (i = [1,4])
@@ -1237,7 +1236,7 @@ module assembly() {
     if (show_case) case();
     if (show_hitchpin_block) hitchpin_block();
     if (show_wrestplank) wrestplank();
-    if (show_rack && use_rack_tongue) rack();
+    if (show_rack) rack();
     if (show_backrail) backrail();
     if (show_balance_rail) balance_rail();
     if (show_belly_rail) belly_rail();
