@@ -146,10 +146,11 @@ kb_pos = [
 keywell_y = key_depth - nat_height;
 kb_end = kb_pos.x + kb_length;
 accidental_width = key_width / 2;
-accidental_height = nat_height / 2;
+accidental_height = wall_th;
 accidental_depth = key_depth / 2;
 key_clearance = key_width / num_keys;
 frontboard_clearance = 3*s;
+frontboard_th = wall_th;
 frontboard_pos = [kb_pos.x, 0, kb_pos.z + nat_height + frontboard_clearance];
 frontboard_height = height + wall_th - frontboard_pos.z;
 
@@ -169,7 +170,7 @@ hitchpin_block_height = (height - inner_bottom_z) * (3/4);
 // Hitchpin height (?)
 hitchpin_height = hitchpin_block_height * (2/3);
 // Hitchpin radius (?)
-hitchpin_radius = 1.05;
+hitchpin_radius = 2.1;
 
 /* [Rack] */
 
@@ -301,7 +302,7 @@ tuning_pin_height = wrestplank_height * (2/3);
 // Balance pin height (?)
 balance_pin_height = 20;
 // Balance pin radius (?)
-balance_pin_radius = tuning_pin_radius;
+balance_pin_radius = 1.05;
 
 string_pos = [
     (hitchpin_block_th / 2),
@@ -1007,6 +1008,25 @@ module key(key_idx) {
                 ],
             ]
         );
+    if (is_accidental(key_idx)) accidental_top(key_idx);
+}
+
+module accidental_top(key_idx) {
+    x0 = key_lever_x(key_idx);
+    x1 = x0 + key_lever_bottom_width(key_idx);
+    front_y = kb_pos.y + accidental_depth;
+    color("black")
+    translate([0, 0, kb_pos.z + nat_height])
+        lasercutout(
+            thickness=accidental_height,
+            points=[
+                [x0, front_y],
+                [x0, -frontboard_th],
+                [x1, -frontboard_th],
+                [x1, front_y],
+            ],
+            flat_adjust=[0, key_depth],
+        );
 }
 
 module keyboard() {
@@ -1189,7 +1209,7 @@ module frontboard() {
         translate(frontboard_pos)
         rotate([90, 0, 0])
         lasercutoutSquare(
-            thickness=wall_th,
+            thickness=frontboard_th,
             x=kb_length,
             y=frontboard_height,
             simple_tabs=[
@@ -1208,7 +1228,7 @@ module key_labels() {
             (is_accidental(key_idx) ? -accidental_depth : -key_depth) * (6/7),
             kb_pos.z + nat_height + (is_accidental(key_idx) ? accidental_height  : 0)
         ])
-            color("black")
+            color(is_accidental(key_idx) ? "white" : "black")
                 linear_extrude(key_clearance)
                 text(text=key_label(key_idx), size=(is_accidental(key_idx) ? accidental_width : key_width) / 3);
 }
