@@ -263,6 +263,9 @@ backrail_pos = [
     inner_width - backrail_width,
     rack_pos.z - wall_th
 ];
+// Global Y of the joint between the backrail's right tab and the belly
+// rail leg, centered on the backrail so it tracks backrail_width
+backrail_bellyrail_joint_y = backrail_pos.y + backrail_width / 1.59;
 
 /* [Bridge] */
 
@@ -965,8 +968,7 @@ module backrail() {
                 [
                     RIGHT,
                     rack_width,
-                    // HACK
-                    22.66*s,
+                    backrail_bellyrail_joint_y - backrail_pos.y,
                 ],
                 // Tabs connecting to back panel
                 for (i = [1,4])
@@ -1059,7 +1061,7 @@ module belly_rail() {
         // Cutout for backrail
         [
             UP,
-            supports[1][2]*(3/4) + wall_th,
+            backrail_bellyrail_joint_y - supports[1][0].y,
             backrail_pos.z-wall_th,
             [wall_th, wall_th*4, wall_th]
         ],

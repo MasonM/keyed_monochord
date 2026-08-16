@@ -36,7 +36,7 @@ lasercutout(thickness = 3,
 
 lasercutout(thickness = 3, 
           points = [[0, 0], [236.519, 0], [236.519, 18], [0, 18], [0, 0]]
-        , simple_tabs = [[90, 0, 13.5, [3, 6, 3]], [270, 236.519, 11.33], [0, 47.3037, 18], [0, 189.215, 18]]
+        , simple_tabs = [[90, 0, 13.5, [3, 6, 3]], [270, 236.519, 11.3208], [0, 47.3037, 18], [0, 189.215, 18]]
         ) 
 
 lasercutout(thickness = 3, 
@@ -50,7 +50,7 @@ lasercutout(thickness = 3,
 lasercutout(thickness = 3, 
           points = [[0, 0], [38.7, 0], [38.7, 14.6929], [0, 14.6929], [0, 0]]
         , simple_tabs = [[180, 9.675, 0], [0, 9.675, 14.6929], [180, 29.025, 0], [0, 29.025, 14.6929]]
-        , simple_tab_holes = [[0, 32.025, 10.7143, [3, 12, 3]]]
+        , simple_tab_holes = [[0, 32.0208, 10.7143, [3, 12, 3]]]
         ) 
 
 lasercutout(thickness = 3, 
