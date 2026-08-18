@@ -768,7 +768,13 @@ module hitchpin_block() {
                     wall_th,
                     wall_th,
                 ],
-                // TODO: Hole for hitchpin
+                // Hitchpin cutout
+                [
+                    hitchpin_block_height - tuning_pin_radius,
+                    string_pos.y - tuning_pin_radius/2,
+                    wrestplank_width,
+                    tuning_pin_radius,
+                ],
             ],
             simple_tabs = [
                 // Right tabs connecting to front panel
@@ -816,6 +822,15 @@ module wrestplank() {
             thickness=wrestplank_width,
             x=wrestplank_height,
             y=inner_width,
+            cutouts = [
+                // Tuning pin cutout
+                [
+                    wrestplank_height - tuning_pin_radius,
+                    string_pos.y - tuning_pin_radius/2,
+                    wrestplank_width,
+                    tuning_pin_radius,
+                ],
+            ],
             simple_tab_holes = [
                 // Soundboard finger joint cutouts
                 for (i = [1,3])
