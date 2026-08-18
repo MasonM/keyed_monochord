@@ -997,8 +997,7 @@ module key(key_idx) {
             */
             circles_remove=[
                 [
-                    // EXPERIMENT
-                    balance_pin_radius + 0.1 + (0.5 / num_keys * key_idx),
+                    balance_pin_radius + 0.2,
                     balance_pin_pos(key_idx).x,
                     balance_pin_pos(key_idx).y
                 ],
