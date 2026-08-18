@@ -902,9 +902,8 @@ module balance_rail() {
 }
 
 module rack() {
-    color("SaddleBrown")
     translate(rack_pos) {
-        lasercutoutSquare(
+        color("SaddleBrown") lasercutoutSquare(
             thickness=rack_th,
             x=rack_width,
             y=rack_depth,
@@ -917,17 +916,26 @@ module rack() {
                 ]
             ],
             simple_tabs = [
+                // Tab connecting to hitchpin rail
+                [
+                    LEFT,
+                    0,
+                    rack_th + wall_th/2,
+                    [wall_th, rack_th, rack_th],
+                ],
                 // Tabs connecting to back panel
                 for (i = [2,3])
-                    [UP, rack_width*(i/5), rack_th, [rack_th, wall_th, rack_th]],
-            ],
-            finger_joints=[
-                [LEFT, 1, 1],
+                    [
+                        UP,
+                        rack_width*(i/5),
+                        rack_depth,
+                        [rack_th, wall_th, rack_th],
+                    ],
             ],
         );
         // EXPERIMENT
         translate([0, 0, rack_th])
-        lasercutoutSquare(
+        color("RosyBrown") lasercutoutSquare(
             thickness=rack_th,
             x=rack_width,
             y=rack_depth,
@@ -943,7 +951,12 @@ module rack() {
             simple_tabs = [
                 // Tabs connecting to back panel
                 for (i = [1.5,3.5])
-                    [UP, rack_width*(i/5), rack_th, [rack_th, wall_th, rack_th]],
+                    [
+                        UP,
+                        rack_width*(i/5),
+                        rack_depth,
+                        [rack_th, wall_th, rack_th]
+                    ],
             ],
         );
     }
@@ -957,7 +970,7 @@ module backrail() {
             x=rack_width,
             y=backrail_width,
             simple_tabs = [
-                // Left tab connecting to side panel
+                // Left tab connecting to hitchpin block
                 [
                     LEFT,
                     0,
