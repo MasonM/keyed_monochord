@@ -36,9 +36,9 @@ show_string = false;
 /* [Main Dimensions] */
 
 // Thickness of thin plywood
-wall_th = 3;
+wall_th = 3.2;
 // Thickness of thick plywood
-thick_th = 6;
+thick_th = 6.2;
 
 // "The internal length used for our reconstruction is 644 mm (the external
 // length is 664 mm), which was determined by adopting a multiple of the number
@@ -146,7 +146,7 @@ kb_pos = [
 keywell_y = key_depth - nat_height;
 kb_end = kb_pos.x + kb_length;
 accidental_width = key_width / 2;
-accidental_height = wall_th;
+accidental_height = nat_height;
 accidental_depth = key_depth / 2;
 key_clearance = key_width / num_keys;
 frontboard_clearance = 3*s;
@@ -978,7 +978,7 @@ module rack() {
 }
 
 module backrail() {
-    color("SaddleBrown")
+    color("Goldenrod")
     translate(backrail_pos)
         lasercutoutSquare(
             thickness=wall_th,
