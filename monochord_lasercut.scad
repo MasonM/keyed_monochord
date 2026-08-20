@@ -964,6 +964,13 @@ module rack() {
                 ]
             ],
             simple_tabs = [
+                // Tab connecting to hitchpin rail
+                [
+                    LEFT,
+                    0,
+                    rack_th + wall_th/2,
+                    [wall_th, rack_th, rack_th],
+                ],
                 // Tabs connecting to back panel
                 for (i = [1.5,3.5])
                     [
