@@ -238,14 +238,14 @@ function key_lever_rack_width(key_idx) =
 /* [Wrestplank] */
 
 // Wrestplank width (?)
-wrestplank_width = hitchpin_block_th;
+wrestplank_th = 9.02;
 // Wrestplank height (?)
 wrestplank_height = hitchpin_block_height;
 // Wrestplank position (?) In this file the case interior spans
 // [0, inner_length] x [0, inner_width] (walls sit outside), so no wall_th
 // offsets here.
 wrestplank_pos = [
-    inner_length - wrestplank_width,
+    inner_length - wrestplank_th,
     0,
     inner_bottom_z
 ];
@@ -298,7 +298,7 @@ string_radius = 0.4;
 
 // Tuning pin radius (?)
 tuning_pin_radius = hitchpin_radius;
-tuning_pin_x = wrestplank_pos.x + (wrestplank_width / 2);
+tuning_pin_x = wrestplank_pos.x + (wrestplank_th / 2);
 tuning_pin_height = wrestplank_height * (2/3);
 
 // Balance pin height (?)
@@ -607,10 +607,10 @@ module case() {
             // and wrestplank (right), which both use [LEFT, 0, 4]
             // fingers along the case's inner width
             [[0, inner_width-wall_th, hitchpin_block_th, wall_th + hitchpin_block_th]],
-            [[inner_length - wrestplank_width, inner_width-wall_th, wrestplank_width, wall_th + wrestplank_width]],
+            [[inner_length - wrestplank_th, inner_width-wall_th, wrestplank_th, wall_th + wrestplank_th]],
             [for (i = [0:3]) each [
                 [0, inner_width * (2*i + 1) / 8, hitchpin_block_th, inner_width / 8],
-                [inner_length - wrestplank_width, inner_width * (2*i + 1) / 8, wrestplank_width, inner_width / 8],
+                [inner_length - wrestplank_th, inner_width * (2*i + 1) / 8, wrestplank_th, inner_width / 8],
             ]]
         ),
     );
@@ -629,8 +629,8 @@ module case() {
                 [ 0, -wall_th, wall_th, wall_th ],
                 [ 0, height / 8, hitchpin_block_th, height / 8 ],
                 // Deepen finger joints on right side for wrestplank
-                [ inner_length - wrestplank_width, -wall_th, wrestplank_width, wall_th ],
-                [ inner_length - wrestplank_width, height / 8, wrestplank_width, height / 8 ],
+                [ inner_length - wrestplank_th, -wall_th, wrestplank_th, wall_th ],
+                [ inner_length - wrestplank_th, height / 8, wrestplank_th, height / 8 ],
             ],
         ),
         simple_tab_holes=[
@@ -719,8 +719,8 @@ module case() {
             [ 0, 0, hitchpin_block_th, height / 8 ],
             [ 0, height / 4, hitchpin_block_th, height / 8 ],
             // Deepen finger joints on right side for wrestplank
-            [ inner_length - wrestplank_width, 0, wrestplank_width, height / 8 ],
-            [ inner_length - wrestplank_width, height / 4, wrestplank_width, height / 8 ],
+            [ inner_length - wrestplank_th, 0, wrestplank_th, height / 8 ],
+            [ inner_length - wrestplank_th, height / 4, wrestplank_th, height / 8 ],
         ],
         finger_joints=[
             [LEFT, 0, 4],
@@ -772,7 +772,7 @@ module hitchpin_block() {
                 [
                     hitchpin_block_height - tuning_pin_radius,
                     string_pos.y - tuning_pin_radius/2,
-                    wrestplank_width,
+                    wrestplank_th,
                     tuning_pin_radius,
                 ],
             ],
@@ -813,13 +813,13 @@ module hitchpin_block() {
 module wrestplank() {
     color("SaddleBrown")
     translate([
-        wrestplank_pos.x + wrestplank_width,
+        wrestplank_pos.x + wrestplank_th,
         0,
         wrestplank_pos.z,
     ])
         rotate([0, -90, 0])
         lasercutoutSquare(
-            thickness=wrestplank_width,
+            thickness=wrestplank_th,
             x=wrestplank_height,
             y=inner_width,
             cutouts = [
@@ -827,7 +827,7 @@ module wrestplank() {
                 [
                     wrestplank_height - tuning_pin_radius,
                     string_pos.y - tuning_pin_radius/2,
-                    wrestplank_width,
+                    wrestplank_th,
                     tuning_pin_radius,
                 ],
             ],
@@ -847,30 +847,30 @@ module wrestplank() {
                     RIGHT,
                     0,
                     -wall_th/2,
-                    [wall_th, height / 8, wrestplank_width],
+                    [wall_th, height / 8, wrestplank_th],
                 ],
                 [
                     RIGHT,
                     height / 4,
                     -wall_th/2,
-                    [wall_th, height / 8, wrestplank_width],
+                    [wall_th, height / 8, wrestplank_th],
                 ],
                 // Left tabs connecting to back panel
                 [
                     RIGHT,
                     -wall_th,
                     inner_width + wall_th / 2,
-                    [wall_th, wall_th, wrestplank_width],
+                    [wall_th, wall_th, wrestplank_th],
                 ],
                 [
                     RIGHT,
                     height / 8,
                     inner_width + wall_th / 2,
-                    [wall_th, height / 8, wrestplank_width],
+                    [wall_th, height / 8, wrestplank_th],
                 ],
             ],
             finger_joints=[
-                [LEFT, 0, 4, [wall_th, wrestplank_width]],
+                [LEFT, 0, 4, [wall_th, wrestplank_th]],
             ],
         );
 }
@@ -1122,7 +1122,7 @@ module soundboard() {
                     RIGHT,
                     soundboard_pos.x + soundboard_width,
                     soundboard_pos.y*(i/4),
-                    [wall_th, wrestplank_width, soundboard_height]
+                    [wall_th, wrestplank_th, soundboard_height]
                 ],
             ],
             circles_remove=[
