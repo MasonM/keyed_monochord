@@ -838,7 +838,7 @@ module wrestplank() {
                         RIGHT,
                         soundboard_pos.z - wrestplank_pos.z,
                         soundboard_pos.y*(i/4),
-                        [wall_th, soundboard_height, wall_th]
+                        [wall_th, soundboard_height, wrestplank_th]
                     ],
             ],
             simple_tabs = [

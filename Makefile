@@ -1,5 +1,5 @@
 .PHONY: all
-all: render/monochord.stl render/box_test.svg render/monochord_lasercut_thick.svg render/monochord_lasercut_thin.svg render/monochord_lasercut_wrestplank.svg render/monochord_lasercut.lbrn2
+all: render/monochord.stl render/box_test.svg render/wrestplank_test.svg render/monochord_lasercut_thick.svg render/monochord_lasercut_thin.svg render/monochord_lasercut_wrestplank.svg render/monochord_lasercut.lbrn2
 
 wall_th := 3
 thick_th := 6
@@ -12,6 +12,9 @@ render/monochord.stl: monochord.scad
 
 render/box_test.svg: box_test.scad lasercut/lasercut.scad
 	./lasercut/convert-2d.py --pack -k -D wall_th=$(wall_th) -D x=40 -D y=40 -D z=40 box_test.scad $@
+
+render/wrestplank_test.svg: wrestplank_test.scad lasercut/lasercut.scad
+	./lasercut/convert-2d.py --pack -k $(params) wrestplank_test.scad $@
 
 render/monochord_lasercut_thin.svg: monochord_lasercut.scad lasercut/lasercut.scad lasercut/convert-2d.py lasercut/pack_svg.py
 	./lasercut/convert-2d.py --pack $(params) -D generate_only=$(wall_th) monochord_lasercut.scad $@
