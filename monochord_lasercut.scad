@@ -1091,6 +1091,7 @@ module belly_rail_section(s, simple_tab_holes=[]) {
 }
 
 module belly_rail() {
+    // TODO: Flexible connectors?
     // Top section
     color("pink") belly_rail_section(supports[1], [
         // Cutout for backrail
