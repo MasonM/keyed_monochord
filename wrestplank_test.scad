@@ -37,17 +37,43 @@ soundboard_pos = [
     // Keep the string (soundboard + bridge + string) just above the tangent
     kb_pos.z + nat_height + tangent_height + tangent_top_string_clearance - (bridge_height + soundboard_height)
 ];
+hitchpin_radius = 2.1;
+tuning_pin_radius = hitchpin_radius;
+hitchpin_block_th = thick_th;
+string_radius = 0.4;
+string_pos = [
+    (hitchpin_block_th / 2),
+    // "Furthermore, the string runs at the location designated by Arnaut for the
+    // "first pair of strings" ( = 3/5 of the width = 82.8 mm, and 13.8 mm from the
+    // center). Thus, Conrad's requirement that it be placed "beyond the center of
+    // the total internal width of the monochord, toward the side away from us" was
+    // also fulfilled. (All further details can be seen in Fig. II.)""
+    wall_th + inner_width * (3/5),
+    soundboard_pos.z + soundboard_height + bridge_height + string_radius,
+];
+
 
 lasercutoutSquare(
     thickness=wrestplank_th,
     x=wrestplank_height,
     y=inner_width,
-    circles_remove=[
-        [4.699, 10, 10], // #13
-        [5.055, 10, 25], // #8
-        [5.220, 10, 40], // #5
-        [5.309, 10, 55], // #4
+    cutouts = [
+        // Tuning pin cutout
+        [
+            wrestplank_height - tuning_pin_radius,
+            string_pos.y - tuning_pin_radius/2,
+            wrestplank_th,
+            tuning_pin_radius,
+        ],
     ],
+    /*
+    circles_remove=[
+        [4.699/2, 10, 10], // #13 - good
+        [5.055/2, 10, 25], // #8 - good
+        [5.220/2, 10, 40], // #5
+        [5.309/2, 10, 55], // #4
+    ],
+    */
     simple_tabs = [
         // Right tabs connecting to front panel
         [

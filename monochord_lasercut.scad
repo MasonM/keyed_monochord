@@ -654,6 +654,7 @@ module case() {
                 backrail_pos.x+rack_width*(i/5),
                 backrail_pos.z-wall_th,
             ],
+            // TODO: Remove sliver on bottom left
         ],
         finger_joints=[
             [LEFT, 1, 4],
